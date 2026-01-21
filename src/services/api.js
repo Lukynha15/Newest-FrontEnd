@@ -1,10 +1,18 @@
 import axios from "axios";
+import { getAcessToken } from "./auth.service";
 
-const api = axios.create({
+export const api = axios.create({
   baseURL: "http://localhost:3000",
   headers: {
-    "Content-Type": "application/json",
+    Authorization: `Bearer ${getAcessToken()}`,
   },
 });
 
-export default api;
+api.interceptors.response.use((config) => {
+  const token = getAcessToken();
+  
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});

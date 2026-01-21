@@ -1,8 +1,13 @@
+"use client"
+
+import { AuthGuard } from "@/guard/AuthGuard";
 
 export default function Home() {
   return (
-    <div>
-      <h1>Home</h1>
-    </div>
+    <AuthGuard>
+      <div>
+        <h1>Home</h1>
+      </div>
+    </AuthGuard>
   );
 }
