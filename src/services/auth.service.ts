@@ -1,5 +1,3 @@
-
-
 export function logout() {
   localStorage.removeItem("acessToken");
 }

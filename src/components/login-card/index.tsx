@@ -12,8 +12,12 @@ import { useAuth } from "@/hooks/useAuth"
 import { FormEvent, useState } from "react"
 import { Input } from "../ui/input"
 import { Label } from "../ui/label"
+import { useRouter } from "next/navigation"
+
 
 export function LoginCard() {
+
+  const router = useRouter()
 
   const { signIn } = useAuth();
   const [email, setEmail] = useState('');
@@ -71,7 +75,7 @@ export function LoginCard() {
         </form>
       </CardContent>
       <CardFooter className="flex-col gap-2">
-        <Button type="submit" className="w-full" >
+        <Button type="submit" className="w-full" onClick={() => {router.push('/register')}} >
           Criar conta
         </Button>
       </CardFooter>

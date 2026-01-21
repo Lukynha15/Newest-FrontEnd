@@ -9,6 +9,7 @@ interface AuthContextData {
   isAuthenticated: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   logout: () => void;
+  register: (name: string, email: string, password: string) => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextData>(
@@ -42,6 +43,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     router.push("/home");
   }
 
+  async function register(name: string, email: string, password: string) {
+    await api.post("user", { name, email, password });
+    router.push("/login");
+  }
+
   function logout() {
     removeAccessToken();
     setIsAuthenticated(false);
@@ -49,7 +55,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, signIn, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, signIn, logout, register }}>
       {children}
     </AuthContext.Provider>
   );
