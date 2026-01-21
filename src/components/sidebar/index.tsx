@@ -1,4 +1,6 @@
-import { Home, Search, Settings, UserPen } from "lucide-react";
+"use client"
+
+import { ArrowBigLeft, Home, Search, Settings, UserPen } from "lucide-react";
 
 import {
   Sidebar,
@@ -11,20 +13,18 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { useAuth } from "@/hooks/useAuth";
 
 const items = [
-  { title: "Página Inicial", url: "/", icon: Home },
+  { title: "Página Inicial", url: "/home", icon: Home },
   { title: "Procurar", url: "/search", icon: Search },
   { title: "Configurações", url: "/settings", icon: Settings },
   { title: "Perfil", url: "/profile", icon: UserPen },
-  { title: "Sair", url: "/profile", icon: UserPen },
 ];
 
-interface AppSidebarProps {
-  children: React.ReactNode;
-}
+export function AppSidebar() {
+  const { logout } = useAuth();
 
-export function AppSidebar({ children }: AppSidebarProps) {
   return (
     <Sidebar>
       <SidebarFooter>
@@ -44,10 +44,21 @@ export function AppSidebar({ children }: AppSidebarProps) {
                   </SidebarMenuItem>
                 ))}
               </SidebarMenu>
+              <SidebarMenuItem className="cursor-pointer">
+                <SidebarMenuButton asChild>
+                  <button
+                    className="flex items-center gap-2 cursor-pointer"
+                    onClick={logout}
+                  >
+                    <ArrowBigLeft />
+                    <span>Sair</span>
+                  </button>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
       </SidebarFooter>
-    </Sidebar>
+    </Sidebar >
   )
 }

@@ -5,8 +5,7 @@ import { AuthGuard } from "@/guard/AuthGuard";
 export default function Home() {
   return (
     <AuthGuard>
-      <div>
-      </div>
+      <h1>Home</h1>
     </AuthGuard>
   );
 }
