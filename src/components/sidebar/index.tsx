@@ -18,8 +18,8 @@ import { useAuth } from "@/hooks/useAuth";
 const items = [
   { title: "Página Inicial", url: "/home", icon: Home },
   { title: "Procurar", url: "/search", icon: Search },
-  { title: "Configurações", url: "/settings", icon: Settings },
   { title: "Perfil", url: "/profile", icon: UserPen },
+  { title: "Configurações", url: "/settings", icon: Settings }
 ];
 
 export function AppSidebar() {

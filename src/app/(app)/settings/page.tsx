@@ -14,7 +14,7 @@ export default function Settings() {
   return (
     <AuthGuard>
       <div className="h-screen flex items-center justify-center absolute left-1/3">
-        <div className="w-full max-w-3xl bg-[var(--popover)] rounded-2xl p-16 mx-auto border-accent border-2">
+        <div className="w-full max-w-3xl bg-popover rounded-2xl p-16 mx-auto border-accent border-2">
           <div className="flex flex-col items-center h-11/12 gap-7">
             <button className="w-44 h-44 rounded-full flex justify-center items-center cursor-pointer">
               <Image
