@@ -48,10 +48,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     router.push("/login");
   }
 
-  function logout() {
+  async function logout() {
     removeAccessToken();
+
+    delete api.defaults.headers.common.Authorization;
+
     setIsAuthenticated(false);
-    router.push("/login");
+    router.replace("/login");
   }
 
   return (

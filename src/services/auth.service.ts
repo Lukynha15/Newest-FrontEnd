@@ -1,5 +1,6 @@
 export function logout() {
-  localStorage.removeItem("accessToken");
+  if (typeof window === "undefined") return;
+  localStorage.removeItem("token");
 }
 
 export function getAcessToken() {
