@@ -3,9 +3,13 @@
 import ArticlePost from "@/components/article-post";
 import Post from "@/components/post";
 import { AuthGuard } from "@/guard/AuthGuard";
+import { usePosts } from "@/hooks/usePost";
 import { CirclePlus } from "lucide-react";
 
 export default function Home() {
+
+  const { data: posts } = usePosts()
+  console.log(posts)
 
   return (
     <AuthGuard>
@@ -16,8 +20,9 @@ export default function Home() {
           <button><CirclePlus className="cursor-pointer hover:scale-110 transition-all" /></button>
         </div>
 
-        <Post username="Lucas" createdAt="Há 1 dia" title="Título do post" content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, repellat." likes={10} comments={5} />
-        <Post username="Lucas" createdAt="Há 1 dia" title="Título do post" content="Conteúdo do post" likes={10} comments={5} />
+        {posts?.map(post => (
+          <Post key={post.id} username={post.author.name} createdAt={new Date(post.createdAt).toLocaleString()} title={post.title} content={post.content} likes={post.likes} comments={post.comments} />
+        ))}
         {/* </div> */}
       </ArticlePost>
     </AuthGuard>
