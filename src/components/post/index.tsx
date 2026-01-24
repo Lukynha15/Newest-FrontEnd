@@ -20,7 +20,7 @@ export default function Post({
   comments,
 }: PostProps) {
   return (
-    <article className="w-full bg-accent border border-input rounded-2xl p-4 flex flex-col gap-3 cursor-pointer hover:bg-accent/95">
+    <article className="w-full bg-accent border border-input rounded-lg p-4 flex flex-col gap-3 cursor-pointer hover:bg-accent/95">
       <header>
         <div>
           <span className="text-sm text-muted-foreground">{username} - {createdAt}</span>
