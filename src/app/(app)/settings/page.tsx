@@ -32,9 +32,12 @@ export default function Settings() {
               <Input type="password" className="h-16 w-xl m-auto" placeholder="Confirmar senha" />
             </div>
           </div>
-          <div className="w-full flex justify-center mt-8">
+          <div className="flex w-xl gap-5 items-center mt-8 m-auto">
             <button className="bg-accent h-14 w-1/2 rounded-lg cursor-pointer hover:brightness-110 hover:bg-accent/95 transition-colors duration-200 ">
               Salvar
+            </button>
+            <button className="bg-red-500 h-14 w-1/2 rounded-lg cursor-pointer hover:brightness-110 hover:bg-red-500/60 transition-colors duration-200 ">
+              Deletar conta
             </button>
           </div>
 

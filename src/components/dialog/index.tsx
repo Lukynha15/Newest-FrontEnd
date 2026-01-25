@@ -13,6 +13,10 @@ interface DialogNoCloseButtonProps {
   title: string;
   description: string;
   icon: React.ReactNode;
+  children?: React.ReactNode
+  textButton?: string
+  onSubmit?: () => void
+  disabled?: boolean;
 }
 
 export function DialogNoCloseButton({
@@ -21,6 +25,10 @@ export function DialogNoCloseButton({
   title,
   description,
   icon,
+  textButton,
+  children,
+  onSubmit,
+  disabled = false 
 }: DialogNoCloseButtonProps) {
   return (
     <Dialog open={open} onOpenChange={(isOpen) => {
@@ -32,8 +40,13 @@ export function DialogNoCloseButton({
           <DialogDescription className="text-muted-foreground mt-1">
             {description}
           </DialogDescription>
-          <Button onClick={onClose} className="mt-2">
-            Fechar
+          {children}
+          <Button 
+            onClick={onSubmit || onClose} 
+            disabled={disabled}
+            className="mt-2"
+          >
+            {textButton}
           </Button>
         </DialogHeader>
       </DialogContent>

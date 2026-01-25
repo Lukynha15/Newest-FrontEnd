@@ -1,6 +1,7 @@
 "use client";
 
 import { Heart, MessageCircle } from "lucide-react";
+import Image from "next/image";
 
 interface PostProps {
   username: string;
@@ -19,10 +20,12 @@ export default function Post({
   likes,
   comments,
 }: PostProps) {
+
   return (
     <article className="w-full bg-accent border border-input rounded-lg p-4 flex flex-col gap-3 cursor-pointer hover:bg-accent/95">
       <header>
-        <div>
+        <div className="flex items-center gap-3">
+          <Image src="/profilePicture.png" alt="Profile Picture" width={24} height={24} className="rounded-full object-cover w-8 h-8" />
           <span className="text-sm text-muted-foreground">{username} - {createdAt}</span>
         </div>
         <h1 className="text-2xl font-medium leading-tight mt-1">
