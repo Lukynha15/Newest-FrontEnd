@@ -12,7 +12,7 @@ export default function Search() {
             <LucideSearch />
             <h1 className="text-2xl font-medium">Buscar perfil</h1>
           </div>
-          <Input className="flex items-center"></Input>
+          <Input className="flex items-center" placeholder="Pesquisar"></Input>
         </div>
       </ArticlePost>
     </AuthGuard>

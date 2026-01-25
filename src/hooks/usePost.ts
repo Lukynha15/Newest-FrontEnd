@@ -1,5 +1,5 @@
-import { PostDTO } from "@/dto/Post";
 import { getPosts } from "@/services/post.service";
+import { PostDTO } from "@/types/Post.types";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "./useAuth";
 

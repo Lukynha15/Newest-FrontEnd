@@ -3,22 +3,22 @@
 import ArticlePost from "@/components/article-post";
 import { DialogNoCloseButton } from "@/components/dialog";
 import Post from "@/components/post";
-import { TextareaDemo } from "@/components/textarea/indes";
+import { TextareaDemo } from "@/components/textarea";
 import { Input } from "@/components/ui/input";
 import { AuthGuard } from "@/guard/AuthGuard";
 import { usePosts } from "@/hooks/usePost";
-import { CirclePlus, NewspaperIcon, AlertCircle } from "lucide-react";
-import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { formatDate } from "@/lib/settings.date";
 import { createPost } from "@/services/post.service";
-import { formatDate } from "@/types/settings.date";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { AlertCircle, CirclePlus, NewspaperIcon } from "lucide-react";
+import { useState } from "react";
 
 export default function Home() {
   const [openNewPost, setOpenNewPost] = useState(false);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [error, setError] = useState(''); 
-  
+  const [error, setError] = useState('');
+
   const { data: posts } = usePosts();
   const queryClient = useQueryClient();
 
@@ -29,6 +29,7 @@ export default function Home() {
       setContent('');
       setError('');
       setOpenNewPost(false);
+      
       queryClient.invalidateQueries({ queryKey: ['posts'] });
     },
     onError: (error) => {
@@ -51,7 +52,7 @@ export default function Home() {
 
   function handleSubmit() {
     setError('');
-    
+
     if (!content.trim()) {
       setError('O conteúdo não pode estar vazio!');
       return;
@@ -73,19 +74,20 @@ export default function Home() {
           onSubmit={handleSubmit}
           disabled={mutation.isPending}
         >
-          <Input 
-            placeholder="Título do post" 
+          <Input
+            placeholder="Título do post"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
-          <TextareaDemo 
-            placeholder="Conteúdo do post" 
+          <TextareaDemo
+            placeholder="Conteúdo do post"
             value={content}
             onChange={(e) => setContent(e.target.value)}
+            className="h-36 resize-none w-full wrap-break-word whitespace-pre-wrap break-all"
           />
-          
+
           {error && (
-            <div className="flex items-center gap-2 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md">
+            <div className="flex items-center gap-2 p-3 bg-red-100 border border-red-400 text-red-500 rounded-md">
               <AlertCircle className="w-5 h-5" />
               <span>{error}</span>
             </div>
@@ -96,22 +98,23 @@ export default function Home() {
           <div className="border-b-2 bg-neutral-900 p-4 flex justify-between items-center">
             <h1 className="text-2xl font-medium">Página inicial</h1>
             <button>
-              <CirclePlus 
-                className="cursor-pointer hover:scale-110 transition-all" 
-                onClick={handleOpenNewPost} 
+              <CirclePlus
+                className="cursor-pointer hover:scale-110 transition-all"
+                onClick={handleOpenNewPost}
               />
             </button>
           </div>
 
+          
           {posts?.map(post => (
-            <Post 
-              key={post.id} 
-              username={post.author.name} 
-              createdAt={formatDate(post.createdAt)} 
-              title={post.title} 
-              content={post.content} 
-              likes={post.likes} 
-              comments={post.comments} 
+            <Post
+              key={post.id}
+              username={post.author.name}
+              createdAt={formatDate(post.createdAt)}
+              title={post.title}
+              content={post.content}
+              likes={post.likes}
+              comments={post.comments}
             />
           ))}
         </ArticlePost>

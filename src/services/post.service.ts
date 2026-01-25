@@ -1,4 +1,4 @@
-import { PostDTO } from "@/dto/Post";
+import { PostDTO } from "@/types/Post.types";
 import { api } from "./api";
 
 export async function getPosts(): Promise<PostDTO[]> {
@@ -11,7 +11,10 @@ export async function getMyPost(): Promise<PostDTO[]> {
   return response.data;
 }
 
-export const createPost = async (postData: { title?: string; content: string }) => {
-  const { data } = await api.post('/posts', postData);
+export const createPost = async (postData: {
+  title?: string;
+  content: string;
+}) => {
+  const { data } = await api.post("/posts", postData);
   return data;
 };

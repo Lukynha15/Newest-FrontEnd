@@ -35,7 +35,7 @@ export default function ProfileCard() {
           <div>
             <p className="text-sm text-muted-foreground">Membro desde {formatDateLong(user?.createdAt)}</p>
             <p className="mt-1 text-sm text-muted-foreground">12 posts</p>
-            <p className="mt-1 text-sm text-muted-foreground">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Debitis exercitationem obcaecati quis provident voluptate ea explicabo porro necessitatibus aliquid numquam, perferendis laudantium, tempore, cumque nam qui hic minus eius consequuntur!</p>
+            <p className="mt-1 text-sm text-muted-foreground">{user?.bio}</p>
           </div>
         </div>
       </div>

@@ -1,5 +1,6 @@
 "use client"
 
+import { TextareaDemo } from "@/components/textarea";
 import { Input } from "@/components/ui/input";
 import { AuthGuard } from "@/guard/AuthGuard";
 import Image from "next/image";
@@ -27,6 +28,7 @@ export default function Settings() {
             </button>
             <div className="w-full h-96 flex flex-col justify-between ml-20 mr-20 gap-7 mt-4">
               <Input defaultValue={settingsUser.name} className="h-16 w-xl m-auto" />
+              <TextareaDemo placeholder="Biografia do Perfil" className="h-32 w-xl m-auto resize-none" />
               <Input type="email" defaultValue={settingsUser.email} className="h-16 w-xl m-auto" />
               <Input type="password" defaultValue={settingsUser.password} className="h-16 w-xl m-auto" />
               <Input type="password" className="h-16 w-xl m-auto" placeholder="Confirmar senha" />

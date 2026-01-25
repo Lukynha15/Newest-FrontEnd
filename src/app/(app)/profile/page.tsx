@@ -4,8 +4,8 @@ import ArticlePost from "@/components/article-post";
 import Post from "@/components/post";
 import ProfileCard from "@/components/profile-card";
 import { AuthGuard } from "@/guard/AuthGuard";
+import { formatDate } from "@/lib/settings.date";
 import { getMyPost } from "@/services/post.service";
-import { formatDate } from "@/types/settings.date";
 import { useQuery } from "@tanstack/react-query";
 
 export default function Profile() {
