@@ -20,3 +20,8 @@ export const updateMyProfile = async (data: {
   const { data: response } = await api.patch("/user/me", data);
   return response;
 };
+
+export const getAllUsers = async (): Promise<User[]> => {
+  const { data } = await api.get("/user");
+  return data;
+};
