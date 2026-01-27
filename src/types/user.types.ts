@@ -4,4 +4,6 @@ export interface User {
   avatar?: string;
   createdAt: string;
   bio: string;
+  email: string;
+  totalPosts: number;
 }

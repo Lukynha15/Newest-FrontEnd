@@ -1,13 +1,13 @@
 // components/post/index.tsx
 'use client';
 
-import { Heart, MessageCircle, Clock, Sparkles } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { toggleLike } from '@/services/post.service';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Clock, Heart, MessageCircle, Sparkles } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { toggleLike } from '@/services/post.service';
 import { useState } from 'react';
-import { cn } from "@/lib/utils";
 
 interface PostProps {
   id: number;
@@ -67,8 +67,9 @@ export default function Post({
     }
   };
 
+
   return (
-    <article 
+    <article
       className={cn(
         "group w-full bg-card border border-border rounded-2xl p-6",
         "transition-all duration-300 ease-out",
@@ -79,20 +80,17 @@ export default function Post({
     >
       <header className="flex items-start justify-between mb-5">
         <div className="flex items-center gap-3">
-          <Image 
-            src="/profilePicture.png" 
+          <Image
+            src="/profilePicture.png"
             alt={username}
-            width={44} 
-            height={44} 
-            className="rounded-full object-cover ring-2 ring-background w-10 h-10" 
+            width={44}
+            height={44}
+            className="rounded-full object-cover ring-2 ring-background w-10 h-10"
           />
-          
+
           <div className="flex flex-col gap-1">
             <span className="font-bold text-sm flex items-center gap-2">
               {username}
-              {localLikesCount > 20 && (
-                <Sparkles className="h-3.5 w-3.5 text-yellow-500 fill-yellow-500" />
-              )}
             </span>
             <div className="flex items-center gap-1.5 text-muted-foreground">
               <Clock className="h-3 w-3" />
@@ -106,7 +104,7 @@ export default function Post({
         {localLikesCount > 15 && (
           <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/10 border border-primary/20">
             <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-            <span className="text-xs font-medium text-primary">Trending</span>
+            <span className="text-xs font-medium text-primary">Em alta</span>
           </div>
         )}
       </header>
@@ -126,15 +124,15 @@ export default function Post({
           disabled={mutation.isPending}
           className={cn(
             "flex items-center gap-2 px-5 py-2.5 rounded-xl font-medium text-sm",
-            "transition-all duration-300",
-            localIsLiked 
-              ? "bg-red-500/15 text-red-500" 
+            "transition-all duration-300 cursor-pointer hover:scale-110 h-full",
+            localIsLiked
+              ? "bg-red-500/15 text-red-500"
               : "bg-secondary hover:bg-secondary/80"
           )}
         >
           <Heart className={cn(
             "h-4 w-4 transition-all duration-300",
-            localIsLiked && "fill-red-500 scale-110"
+            localIsLiked && "fill-red-500 scale-110 "
           )} />
           <span>{localLikesCount}</span>
         </button>
@@ -144,7 +142,8 @@ export default function Post({
             e.stopPropagation();
             router.push(`/post/${id}`);
           }}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-medium text-sm bg-secondary hover:bg-secondary/80 transition-all duration-300"
+          className="flex items-center hover:scale-110 gap-2 px-5 py-2.5 rounded-xl font-medium 
+          text-sm bg-secondary hover:bg-secondary/80 transition-all duration-300 cursor-pointer"
         >
           <MessageCircle className="h-4 w-4" />
           <span>{comments}</span>

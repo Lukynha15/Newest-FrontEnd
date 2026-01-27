@@ -5,6 +5,7 @@ interface TextareaDemoProps {
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   className?: string;
+  defaultValue?: string;
 }
 
 export function TextareaDemo({
@@ -12,6 +13,7 @@ export function TextareaDemo({
   value,
   onChange,
   className,
+  defaultValue
 }: TextareaDemoProps) {
   return (
     <Textarea
@@ -19,6 +21,7 @@ export function TextareaDemo({
       value={value}
       onChange={onChange}
       className={className}
+      defaultValue={defaultValue}
     />
   );
 }

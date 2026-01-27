@@ -3,15 +3,19 @@
 import { TextareaDemo } from "@/components/textarea";
 import { Input } from "@/components/ui/input";
 import { AuthGuard } from "@/guard/AuthGuard";
+import { getMyInformations } from "@/services/user.service";
+import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 
-const settingsUser = {
-  name: "Lucas",
-  email: "lucas@lucas",
-  password: "123456"
-}
 
 export default function Settings() {
+  const {
+    data: user
+  } = useQuery({
+    queryKey: ['myUser'],
+    queryFn: getMyInformations,
+  });
+
   return (
     <AuthGuard>
       <div className="h-screen flex items-center justify-center absolute left-1/3">
@@ -27,10 +31,10 @@ export default function Settings() {
               />
             </button>
             <div className="w-full h-96 flex flex-col justify-between ml-20 mr-20 gap-7 mt-4">
-              <Input defaultValue={settingsUser.name} className="h-16 w-xl m-auto" />
-              <TextareaDemo placeholder="Biografia do Perfil" className="h-32 w-xl m-auto resize-none" />
-              <Input type="email" defaultValue={settingsUser.email} className="h-16 w-xl m-auto" />
-              <Input type="password" defaultValue={settingsUser.password} className="h-16 w-xl m-auto" />
+              <Input defaultValue={user?.name} className="h-16 w-xl m-auto" placeholder="Nome de usuário" />
+              <TextareaDemo defaultValue={user?.bio} placeholder="Biografia do Perfil" className="h-32 w-xl m-auto resize-none" />
+              <Input defaultValue={user?.email} type="email" className="h-16 w-xl m-auto" placeholder="Email" />
+              <Input type="password" className="h-16 w-xl m-auto" placeholder="Nova senha" />
               <Input type="password" className="h-16 w-xl m-auto" placeholder="Confirmar senha" />
             </div>
           </div>

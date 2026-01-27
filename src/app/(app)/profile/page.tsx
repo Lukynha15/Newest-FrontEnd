@@ -47,6 +47,9 @@ export default function Profile() {
               key={post.id}
               username={post.author?.name}
               createdAt={formatDate(post.createdAt)}
+              isLiked={post.isLiked}
+              id={Number(post.id)}
+              clickable
               title={post.title || ""}
               content={post.content}
               likes={post.likes || 0}

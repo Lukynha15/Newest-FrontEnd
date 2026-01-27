@@ -1,3 +1,5 @@
+import { formatDateLong } from "@/lib/settings.date";
+import { postSettings } from "@/lib/settings.post";
 import { getMyProfile } from "@/services/user.service";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
@@ -10,15 +12,6 @@ export default function ProfileCard() {
     queryKey: ['myProfile'],
     queryFn: getMyProfile,
   });
-
-  const formatDateLong = (date?: string) => {
-    if (!date) return 'Data não disponível';
-    return new Date(date).toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric'
-    });
-  };
 
   return (
     <div className="p-3 border-b-2">
@@ -34,7 +27,7 @@ export default function ProfileCard() {
           <h1 className="text-3xl font-bold">{user?.name}</h1>
           <div>
             <p className="text-sm text-muted-foreground">Membro desde {formatDateLong(user?.createdAt)}</p>
-            <p className="mt-1 text-sm text-muted-foreground">12 posts</p>
+            <p className="mt-1 text-sm text-muted-foreground">{postSettings(user?.totalPosts ?? 0)}</p>
             <p className="mt-1 text-sm text-muted-foreground">{user?.bio}</p>
           </div>
         </div>
