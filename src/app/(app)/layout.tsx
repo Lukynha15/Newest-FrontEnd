@@ -3,7 +3,6 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { Geist, Geist_Mono } from "next/font/google";
 
-import { queryClient } from "@/lib/react-query";
 import { ReactQueryProvider } from "@/provider/ReactQueryProvider";
 import "../../app/globals.css";
 

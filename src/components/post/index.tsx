@@ -1,50 +1,153 @@
-"use client";
+// components/post/index.tsx
+'use client';
 
-import { Heart, MessageCircle } from "lucide-react";
+import { Heart, MessageCircle, Clock, Sparkles } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toggleLike } from '@/services/post.service';
+import { useState } from 'react';
+import { cn } from "@/lib/utils";
 
 interface PostProps {
+  id: number;
   username: string;
   createdAt: string;
   title: string;
   content: string;
   likes: number;
+  isLiked: boolean;
   comments: number;
+  clickable?: boolean;
 }
 
 export default function Post({
+  id,
   username,
   createdAt,
   title,
   content,
   likes,
+  isLiked,
   comments,
+  clickable = true,
 }: PostProps) {
+  const router = useRouter();
+  const [localIsLiked, setLocalIsLiked] = useState(isLiked);
+  const [localLikesCount, setLocalLikesCount] = useState(likes);
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: () => toggleLike(id),
+    onMutate: async () => {
+      setLocalIsLiked(!localIsLiked);
+      setLocalLikesCount(localIsLiked ? localLikesCount - 1 : localLikesCount + 1);
+    },
+    onSuccess: (data) => {
+      setLocalIsLiked(data.isLiked);
+      setLocalLikesCount(data.likesCount);
+      queryClient.invalidateQueries({ queryKey: ['posts'] });
+      queryClient.invalidateQueries({ queryKey: ['myPosts'] });
+      queryClient.invalidateQueries({ queryKey: ['post', id.toString()] });
+    },
+    onError: () => {
+      setLocalIsLiked(!localIsLiked);
+      setLocalLikesCount(localIsLiked ? localLikesCount + 1 : localLikesCount - 1);
+    },
+  });
+
+  const handleLike = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    mutation.mutate();
+  };
+
+  const handlePostClick = () => {
+    if (clickable) {
+      router.push(`/post/${id}`);
+    }
+  };
 
   return (
-    <article className="w-full bg-accent border border-input rounded-lg p-4 flex flex-col gap-3 cursor-pointer hover:bg-accent/95">
-      <header>
+    <article 
+      className={cn(
+        "group w-full bg-card border border-border rounded-2xl p-6",
+        "transition-all duration-300 ease-out",
+        "hover:shadow-lg hover:border-primary/30 hover:bg-accent/50",
+        clickable && "cursor-pointer hover:-translate-y-1"
+      )}
+      onClick={handlePostClick}
+    >
+      <header className="flex items-start justify-between mb-5">
         <div className="flex items-center gap-3">
-          <Image src="/profilePicture.png" alt="Profile Picture" width={24} height={24} className="rounded-full object-cover w-8 h-8" />
-          <span className="text-sm text-muted-foreground">{username} - {createdAt}</span>
+          <Image 
+            src="/profilePicture.png" 
+            alt={username}
+            width={44} 
+            height={44} 
+            className="rounded-full object-cover ring-2 ring-background w-10 h-10" 
+          />
+          
+          <div className="flex flex-col gap-1">
+            <span className="font-bold text-sm flex items-center gap-2">
+              {username}
+              {localLikesCount > 20 && (
+                <Sparkles className="h-3.5 w-3.5 text-yellow-500 fill-yellow-500" />
+              )}
+            </span>
+            <div className="flex items-center gap-1.5 text-muted-foreground">
+              <Clock className="h-3 w-3" />
+              <span className="text-xs">
+                {createdAt}
+              </span>
+            </div>
+          </div>
         </div>
-        <h1 className="text-2xl font-medium leading-tight mt-1">
-          {title}
-        </h1>
+
+        {localLikesCount > 15 && (
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/10 border border-primary/20">
+            <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+            <span className="text-xs font-medium text-primary">Trending</span>
+          </div>
+        )}
       </header>
 
-      <section className="text-sm leading-relaxed">
-        {content}
-      </section>
+      <div className="space-y-3 mb-6">
+        <h2 className="text-xl font-bold leading-snug">
+          {title}
+        </h2>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          {content}
+        </p>
+      </div>
 
-      <footer className="mt-auto pt-3 border-t border-input flex justify-evenly">
-        <button className="flex gap-2 items-center">
-          <Heart size={20} className="cursor-pointer hover:scale-110 transition-all hover:text-red-500" />
-          <span className="text-muted-foreground">{likes}</span>
+      <footer className="flex items-center gap-3">
+        <button
+          onClick={handleLike}
+          disabled={mutation.isPending}
+          className={cn(
+            "flex items-center gap-2 px-5 py-2.5 rounded-xl font-medium text-sm",
+            "transition-all duration-300",
+            localIsLiked 
+              ? "bg-red-500/15 text-red-500" 
+              : "bg-secondary hover:bg-secondary/80"
+          )}
+        >
+          <Heart className={cn(
+            "h-4 w-4 transition-all duration-300",
+            localIsLiked && "fill-red-500 scale-110"
+          )} />
+          <span>{localLikesCount}</span>
         </button>
-        <button className="flex gap-2 items-center">
-          <MessageCircle size={20} className="cursor-pointer hover:scale-110 transition-all" />
-          <span className="text-muted-foreground">{comments}</span>
+
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            router.push(`/post/${id}`);
+          }}
+          className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-medium text-sm bg-secondary hover:bg-secondary/80 transition-all duration-300"
+        >
+          <MessageCircle className="h-4 w-4" />
+          <span>{comments}</span>
         </button>
       </footer>
     </article>

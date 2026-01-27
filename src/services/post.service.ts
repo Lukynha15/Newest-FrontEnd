@@ -18,3 +18,13 @@ export const createPost = async (postData: {
   const { data } = await api.post("/posts", postData);
   return data;
 };
+
+export const toggleLike = async (postId: number) => {
+  const { data } = await api.patch(`/posts/${postId}/like`);
+  return data;
+};
+
+export const getPostById = async (postId: string) => {
+  const { data } = await api.get(`/posts/${postId}`);
+  return data;
+};

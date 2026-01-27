@@ -60,13 +60,16 @@ export function CardDemo() {
         title="Email já em uso!"
         description="O email informado já está cadastrado no nosso sistema."
         icon={<CircleX className="text-red-500"/>}
+        showCancelButton={false}
+        textButton="Entendi"
       />
       <DialogNoCloseButton
         open={openSucess}
         onClose={handleCloseSucess}
         title="Conta criada com sucesso!"
-        description="Agora voce pode logar com suas credenciais."
+        description="Agora você pode logar com suas credenciais."
         icon={<Check className="text-green-500" />}
+        showCancelButton={false}
       />
       <Card className="w-full max-w-sm">
         <CardHeader>

@@ -3,10 +3,10 @@ export interface PostDTO {
   createdAt: Date;
   title: string;
   content: string;
+  isLiked: boolean;
   likes: number;
   comments: number;
   author: {
-    id: string;
     name: string;
   };
 }

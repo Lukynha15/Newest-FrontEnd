@@ -47,6 +47,8 @@ export function LoginCard() {
         description="Verifique seus dados e tente novamente."
         icon={<CircleX className="text-red-500" />}
         onClose={() => setOpen(false)}
+        showCancelButton={false}
+        textButton="Entendi"
       />
       <Card className="w-full max-w-sm">
         <CardHeader>

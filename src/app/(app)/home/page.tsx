@@ -3,6 +3,7 @@
 import ArticlePost from "@/components/article-post";
 import { DialogNoCloseButton } from "@/components/dialog";
 import Post from "@/components/post";
+
 import { TextareaDemo } from "@/components/textarea";
 import { Input } from "@/components/ui/input";
 import { AuthGuard } from "@/guard/AuthGuard";
@@ -29,7 +30,7 @@ export default function Home() {
       setContent('');
       setError('');
       setOpenNewPost(false);
-      
+
       queryClient.invalidateQueries({ queryKey: ['posts'] });
     },
     onError: (error) => {
@@ -105,18 +106,22 @@ export default function Home() {
             </button>
           </div>
 
-          
+
           {posts?.map(post => (
             <Post
-              key={post.id}
+              key={`${post.id}-${post.isLiked}`}
+              id={Number(post.id)}
               username={post.author.name}
               createdAt={formatDate(post.createdAt)}
               title={post.title}
               content={post.content}
               likes={post.likes}
+              isLiked={post.isLiked}
               comments={post.comments}
             />
           ))}
+
+
         </ArticlePost>
       </AuthGuard>
     </>

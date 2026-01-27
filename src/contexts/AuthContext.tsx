@@ -40,7 +40,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     api.defaults.headers.common.Authorization = `Bearer ${acessToken}`;
 
     setIsAuthenticated(true);
-    router.push("/home");
+
+    window.location.href = "/home";
   }
 
   async function register(name: string, email: string, password: string) {
@@ -53,7 +54,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     delete api.defaults.headers.common.Authorization;
 
     setIsAuthenticated(false);
-    router.replace("/login");
+    
+    window.location.href = "/login";
   }
 
   return (
