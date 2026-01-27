@@ -1,10 +1,9 @@
-// components/post/index.tsx
 'use client';
 
 import { cn } from "@/lib/utils";
 import { toggleLike } from '@/services/post.service';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Clock, Heart, MessageCircle, Sparkles } from "lucide-react";
+import { Clock, Heart, MessageCircle } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from 'react';

@@ -17,10 +17,3 @@ export function postSettings(count: number): string {
 
   return `${(count / 1_000_000).toFixed(1)}M posts`;
 }
-
-console.log(postSettings(0)); // "0"
-console.log(postSettings(1)); // "1"
-console.log(postSettings(999)); // "999"
-console.log(postSettings(1000)); // "1k"
-console.log(postSettings(1500)); // "1.5k"
-console.log(postSettings(1000000)); // "1M"

@@ -71,7 +71,7 @@ export function DialogNoCloseButton({
                 variant="outline" 
                 onClick={onClose}
                 disabled={disabled}
-                className="flex-1 sm:flex-none"
+                className="flex-1 sm:flex-none cursor-pointer"
               >
                 {cancelText}
               </Button>
@@ -82,7 +82,7 @@ export function DialogNoCloseButton({
                 onClick={onSubmit || onClose} 
                 disabled={disabled}
                 className={cn(
-                  "flex-1 sm:flex-none",
+                  "flex-1 sm:flex-none cursor-pointer",
                   disabled && "opacity-50 cursor-not-allowed"
                 )}
               >
