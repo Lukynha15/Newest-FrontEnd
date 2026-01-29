@@ -28,3 +28,8 @@ export const getPostById = async (postId: string) => {
   const { data } = await api.get(`/posts/${postId}`);
   return data;
 };
+
+export const getUserPosts = async (userId: string) => {
+  const { data } = await api.get(`/posts/user/${userId}`);
+  return data;
+};

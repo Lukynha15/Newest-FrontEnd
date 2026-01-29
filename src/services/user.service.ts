@@ -25,3 +25,20 @@ export const getAllUsers = async (): Promise<User[]> => {
   const { data } = await api.get("/user");
   return data;
 };
+
+export const searchUsers = async (query: string) => {
+  const { data } = await api.get("/user/search", {
+    params: { q: query },
+  });
+  return data;
+};
+
+export const getUserById = async (id: number) => {
+  const { data } = await api.get(`/user/${id}`);
+  return data;
+};
+
+export const getPostByUserId = async (id: number) => {
+  const { data } = await api.get(`/user/${id}/posts`);
+  return data;
+};

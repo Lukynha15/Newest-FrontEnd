@@ -4,7 +4,7 @@ interface ArticlePostProps {
 
 export default function ArticlePost({ children }: ArticlePostProps) {
   return (
-    <div className="w-lg h-screen bg-popover border-accent border-y-0 border-x-2">
+    <div className="w-xl h-screen bg-popover border-accent border-y-0 border-x-2">
       {children}
     </div>
   );

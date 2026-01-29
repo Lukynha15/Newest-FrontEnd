@@ -1,5 +1,6 @@
 'use client';
 
+import { settingsLike } from "@/lib/settings.like";
 import { cn } from "@/lib/utils";
 import { toggleLike } from '@/services/post.service';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -133,7 +134,7 @@ export default function Post({
             "h-4 w-4 transition-all duration-300",
             localIsLiked && "fill-red-500 scale-110 "
           )} />
-          <span>{localLikesCount}</span>
+          <span>{settingsLike(localLikesCount)}</span>
         </button>
 
         <button
@@ -145,7 +146,7 @@ export default function Post({
           text-sm bg-secondary hover:bg-secondary/80 transition-all duration-300 cursor-pointer"
         >
           <MessageCircle className="h-4 w-4" />
-          <span>{comments}</span>
+          <span>{comments || 0}</span>
         </button>
       </footer>
     </article>

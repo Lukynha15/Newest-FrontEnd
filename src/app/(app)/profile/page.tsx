@@ -74,18 +74,17 @@ export default function Profile() {
               </div>
 
               <div className="space-y-4">
-                {posts.map((post) => (
+                {posts?.map(post => (
                   <Post
-                    key={post.id}
+                    key={`${post.id}-${post.isLiked}`}
                     id={Number(post.id)}
-                    username={post.author?.name}
+                    username={post.author.name}
                     createdAt={formatDate(post.createdAt)}
-                    title={post.title || ""}
+                    title={post.title}
                     content={post.content}
-                    likes={post.likes || 0}
+                    likes={post.likes}
                     isLiked={post.isLiked}
-                    comments={post.comments || 0}
-                    clickable
+                    comments={post.comments}
                   />
                 ))}
               </div>

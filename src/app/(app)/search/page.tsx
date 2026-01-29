@@ -1,46 +1,37 @@
-"use client";
+// app/(app)/search/page.tsx
+'use client';
 
-import ArticlePost from "@/components/article-post";
-import ShortProfile from "@/components/short-profile";
-import { Input } from "@/components/ui/input";
-import { AuthGuard } from "@/guard/AuthGuard";
-import { formatDate, formatDateLong } from "@/lib/settings.date";
-import { getAllUsers } from "@/services/user.service";
-import { useQuery } from "@tanstack/react-query";
-import { LucideSearch } from "lucide-react";
+import ArticlePost from '@/components/article-post';
+import { Separator } from '@/components/ui/separator';
+import { UserSearch } from '@/components/user-search';
+import { AuthGuard } from '@/guard/AuthGuard';
+import { Search as SearchIcon } from 'lucide-react';
 
-export default function Search() {
-  const { data: users, isLoading, isError } = useQuery({
-    queryKey: ["users"],
-    queryFn: () => getAllUsers(),
-  });
-
-
+export default function SearchPage() {
   return (
     <AuthGuard>
       <ArticlePost>
-        <div className="border-b-2 bg-neutral-900 p-4 flex flex-col gap-4">
-          <div className="flex items-center gap-4">
-            <LucideSearch />
-            <h1 className="text-2xl font-medium">Buscar perfil</h1>
+        <div className="p-6 space-y-6">
+          <div className="space-y-2 ">
+            <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
+              <SearchIcon className="h-8 w-8 text-primary" />
+              Buscar Usuários
+            </h1>
           </div>
-          <Input className="flex items-center" placeholder="Pesquisar"></Input>
-        </div>
 
-        <div className="pt-5 pl-5">
-          {isLoading && <p>Carregando...</p>}
-          {isError && <p>Erro ao carregar usuários</p>}
+          <div className="max-w-2xl mx-auto">
+            <UserSearch />
+          </div>
 
-          <h1 className="text-2xl font-medium">Resultados</h1>
-          {users?.map((user) => (
-            <ShortProfile
-              key={user.id}
-              name={user.name}
-              createdAt={formatDateLong(user.createdAt)}
-              bio={user.bio}
-              avatar={user.avatar!}
-            />
-          ))}
+          <Separator />
+
+          <div className="max-w-2xl mx-auto mt-8 p-4 bg-muted/30 rounded-lg">
+            <h3 className="font-semibold text-sm mb-2">💡 Dicas de busca</h3>
+            <ul className="text-xs text-muted-foreground space-y-1">
+              <li>• Digite o nome ou email do usuário</li>
+              <li>• A busca é feita em tempo real</li>
+            </ul>
+          </div>
         </div>
       </ArticlePost>
     </AuthGuard>
