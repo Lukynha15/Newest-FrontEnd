@@ -1,22 +1,33 @@
 "use client";
 
-import { useContext, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { AuthContext } from "@/contexts/AuthContext";
 import { getAcessToken } from "@/services/auth.service";
+import { useRouter } from "next/navigation";
+import { useContext, useEffect } from "react";
+
+
+import { useState } from "react";
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, logout } = useContext(AuthContext);
+  const { isAuthenticated } = useContext(AuthContext);
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+
     const token = getAcessToken();
 
     if (!token || !isAuthenticated) {
-      logout();
       router.replace("/login");
     }
-  }, [isAuthenticated, logout, router]);
+  }, [mounted, isAuthenticated, router]);
+
+  if (!mounted || !isAuthenticated) return null;
 
   return <>{children}</>;
 }

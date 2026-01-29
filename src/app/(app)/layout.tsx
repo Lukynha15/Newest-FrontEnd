@@ -16,6 +16,14 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+export const metadata = {
+  title: {
+    default: "Newest",
+    template: "%s | Newest",
+  },
+  description: "Descrição padrão",
+};
+
 export default function AppLayout({
   children,
 }: Readonly<{

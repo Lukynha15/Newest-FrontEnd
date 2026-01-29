@@ -72,19 +72,12 @@ export function LoginCard() {
                 />
               </div>
               <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Senha</Label>
-                  <a
-                    href="#"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                  >
-                    Esqueceu a senha?
-                  </a>
-                </div>
+                <Label htmlFor="password">Senha</Label>
                 <Input
                   id="password"
                   name="password"
                   type="password"
+                  placeholder="••••••••"
                   onChange={e => setPassword(e.target.value)}
                   required
                 />

@@ -13,6 +13,14 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+export const metadata = {
+  title: {
+    default: "Meu App",
+    template: "%s | Newest",
+  },
+  description: "Descrição padrão",
+};
+
 export default function AuthLayout({
   children,
 }: Readonly<{

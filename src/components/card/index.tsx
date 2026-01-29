@@ -115,7 +115,7 @@ export function CardDemo() {
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   type="password"
-                  placeholder="Senha"
+                  placeholder="••••••••"
                   required
                 />
               </div>
