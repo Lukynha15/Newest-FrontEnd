@@ -1,4 +1,3 @@
-// app/(app)/search/page.tsx
 'use client';
 
 import ArticlePost from '@/components/article-post';
