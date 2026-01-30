@@ -3,10 +3,9 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { searchUsers } from '@/services/user.service';
-import { getMyProfile } from '@/services/user.service'; // adicione esta importação
+import { getMyProfile } from '@/services/user.service';
 import { Input } from '@/components/ui/input';
 import { Search, Loader2, User } from 'lucide-react';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useDebounce } from '@/hooks/use-debounce';
 import { cn } from '@/lib/utils';
@@ -46,6 +45,12 @@ export function UserSearch() {
     setIsFocused(false);
   };
 
+  const getAvatarUrl = (avatar: string | null) => {
+    if (!avatar) return null;
+    if (avatar.startsWith('http')) return avatar;
+    return `http://localhost:3000${avatar}`;
+  };
+
   return (
     <div className="relative w-full">
       <div className="relative">
@@ -75,43 +80,45 @@ export function UserSearch() {
             </div>
           ) : filteredUsers.length > 0 ? (
             <div className="py-2">
-              {filteredUsers.map((user) => (
-                <button
-                  key={user.id}
-                  onClick={() => handleUserClick(user.id)}
-                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-accent transition-colors text-left"
-                >
-                  <div className="w-12 h-12 rounded-full overflow-hidden bg-muted shrink-0 ring-2 ring-background">
-                    {user.avatar ? (
-                      <Image
-                        src={user.avatar}
-                        alt={user.name}
-                        width={48}
-                        height={48}
-                        className="object-cover w-full h-full"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-primary/10">
-                        <User className="h-6 w-6 text-primary" />
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-sm truncate">{user.name}</p>
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <span className="truncate">{user.email}</span>
-                      <span>•</span>
-                      <span>{user.totalPosts} {user.totalPosts === 1 ? 'post' : 'posts'}</span>
+              {filteredUsers.map((user) => {
+                const avatarUrl = getAvatarUrl(user.avatar);
+                
+                return (
+                  <button
+                    key={user.id}
+                    onClick={() => handleUserClick(user.id)}
+                    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-accent transition-colors text-left"
+                  >
+                    <div className="w-12 h-12 rounded-full overflow-hidden bg-muted shrink-0 ring-2 ring-background">
+                      {avatarUrl ? (
+                        <img
+                          src={avatarUrl}
+                          alt={user.name}
+                          className="object-cover w-full h-full"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-primary/10">
+                          <User className="h-6 w-6 text-primary" />
+                        </div>
+                      )}
                     </div>
-                    {user.bio && (
-                      <p className="text-xs text-muted-foreground truncate mt-0.5">
-                        {user.bio}
-                      </p>
-                    )}
-                  </div>
-                </button>
-              ))}
+
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-sm truncate">{user.name}</p>
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <span className="truncate">{user.email}</span>
+                        <span>•</span>
+                        <span>{user.totalPosts} {user.totalPosts === 1 ? 'post' : 'posts'}</span>
+                      </div>
+                      {user.bio && (
+                        <p className="text-xs text-muted-foreground truncate mt-0.5">
+                          {user.bio}
+                        </p>
+                      )}
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           ) : (
             <div className="p-8 text-center">

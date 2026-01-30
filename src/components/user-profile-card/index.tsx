@@ -2,7 +2,6 @@
 
 import { formatDateLong } from "@/lib/settings.date";
 import { postSettings } from "@/lib/settings.post";
-import Image from "next/image";
 import { Calendar, FileText, User } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -12,6 +11,14 @@ interface UserProfileCardProps {
 }
 
 export default function UserProfileCard({ user, isLoading }: UserProfileCardProps) {
+  const getAvatarUrl = () => {
+    if (user?.avatar) {
+      if (user.avatar.startsWith('http')) return user.avatar;
+      return `http://localhost:3000${user.avatar}`;
+    }
+    return null;
+  };
+
   if (isLoading) {
     return (
       <div className="p-6 border-b border-border">
@@ -30,6 +37,8 @@ export default function UserProfileCard({ user, isLoading }: UserProfileCardProp
 
   if (!user) return null;
 
+  const avatarUrl = getAvatarUrl();
+
   return (
     <div className="relative">
       <div className="h-32 bg-gradient-to-br from-primary/20 via-primary/10 to-background" />
@@ -38,12 +47,10 @@ export default function UserProfileCard({ user, isLoading }: UserProfileCardProp
         <div className="flex items-end justify-between -mt-16 mb-4">
           <div className="relative group">
             <div className="w-32 h-32 rounded-full overflow-hidden ring-4 ring-background shadow-xl">
-              {user.avatar ? (
-                <Image 
-                  src={user.avatar} 
+              {avatarUrl ? (
+                <img 
+                  src={avatarUrl}
                   alt={user.name} 
-                  width={128} 
-                  height={128} 
                   className="object-cover w-full h-full"
                 />
               ) : (

@@ -38,6 +38,7 @@ export default function PostPage() {
           isLiked={post.isLiked}
           comments={post.comments || 0}
           clickable={false}
+          avatar={post.author.avatar}
         />
         <div className="mt-8">
           <h2 className="text-xl font-bold mb-4">Comentários</h2>

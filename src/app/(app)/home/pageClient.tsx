@@ -117,6 +117,7 @@ export default function HomeClient() {
               key={`${post.id}-${post.isLiked}`}
               id={Number(post.id)}
               username={post.author.name}
+              avatar={post.author.avatar}
               createdAt={formatDate(post.createdAt)}
               title={post.title}
               content={post.content}
@@ -125,8 +126,6 @@ export default function HomeClient() {
               comments={post.comments}
             />
           ))}
-
-
         </ArticlePost>
       </AuthGuard>
     </>

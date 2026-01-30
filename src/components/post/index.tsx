@@ -5,13 +5,13 @@ import { cn } from "@/lib/utils";
 import { toggleLike } from '@/services/post.service';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Clock, Heart, MessageCircle } from "lucide-react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from 'react';
 
 interface PostProps {
   id: number;
   username: string;
+  avatar?: string;
   createdAt: string;
   title: string;
   content: string;
@@ -24,6 +24,7 @@ interface PostProps {
 export default function Post({
   id,
   username,
+  avatar,
   createdAt,
   title,
   content,
@@ -67,6 +68,13 @@ export default function Post({
     }
   };
 
+  const getAvatarUrl = () => {
+    if (avatar) {
+      if (avatar.startsWith('http')) return avatar;
+      return `http://localhost:3000${avatar}`;
+    }
+    return '/profilePicture.png';
+  };
 
   return (
     <article
@@ -80,11 +88,9 @@ export default function Post({
     >
       <header className="flex items-start justify-between mb-5">
         <div className="flex items-center gap-3">
-          <Image
-            src="/profilePicture.png"
+          <img
+            src={getAvatarUrl()}
             alt={username}
-            width={44}
-            height={44}
             className="rounded-full object-cover ring-2 ring-background w-10 h-10"
           />
 

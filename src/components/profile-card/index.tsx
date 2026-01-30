@@ -2,7 +2,6 @@ import { formatDateLong } from "@/lib/settings.date";
 import { postSettings } from "@/lib/settings.post";
 import { getMyProfile } from "@/services/user.service";
 import { useQuery } from "@tanstack/react-query";
-import Image from "next/image";
 import { Calendar, FileText, Settings } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
@@ -19,11 +18,19 @@ export default function ProfileCard() {
     queryFn: getMyProfile,
   });
 
+  const getAvatarUrl = () => {
+    if (user?.avatar) {
+      if (user.avatar.startsWith('http')) return user.avatar;
+      return `http://localhost:3000${user.avatar}`;
+    }
+    return '/profilePicture.png';
+  };
+
   if (isLoading) {
     return (
       <div className="p-6 border-b border-border">
         <div className="flex items-start gap-6">
-          <Skeleton className="w-32 h-32 rounded-full hrink-0" />
+          <Skeleton className="w-32 h-32 rounded-full shrink-0" />
           <div className="flex-1 space-y-3">
             <Skeleton className="h-8 w-48" />
             <Skeleton className="h-4 w-64" />
@@ -37,17 +44,15 @@ export default function ProfileCard() {
 
   return (
     <div className="relative">
-      <div className="h-32 bg-linear-to-br from-primary/20 via-primary/10 to-background" />
+      <div className="h-32 bg-gradient-to-br from-primary/20 via-primary/10 to-background" />
 
       <div className="px-6 pb-6">
         <div className="flex items-end justify-between -mt-16 mb-4">
           <div className="relative group">
             <div className="w-32 h-32 rounded-full overflow-hidden ring-4 ring-background shadow-xl">
-              <Image 
-                src="/profilePicture.png" 
+              <img 
+                src={getAvatarUrl()}
                 alt="Profile Picture" 
-                width={128} 
-                height={128} 
                 className="object-cover w-full h-full"
               />
             </div>

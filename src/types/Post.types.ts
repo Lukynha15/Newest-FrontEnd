@@ -8,5 +8,6 @@ export interface PostDTO {
   comments: number;
   author: {
     name: string;
+    avatar: string;
   };
 }

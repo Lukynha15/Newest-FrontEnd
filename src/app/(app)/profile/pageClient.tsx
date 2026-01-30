@@ -164,6 +164,7 @@ export default function ProfileClient() {
                     likes={post.likes}
                     isLiked={post.isLiked}
                     comments={post.comments}
+                    avatar={post.author.avatar}
                   />
                 ))}
               </div>
