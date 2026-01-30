@@ -6,16 +6,18 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { AuthGuard } from "@/guard/AuthGuard";
+import { useUploadAvatar } from "@/hooks/useAvatar";
 import { queryClient } from "@/lib/react-query";
 import { getMyInformations, updateMyProfile } from "@/services/user.service";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AlertCircle, Camera, CheckCircle, FileText, Loader2, Lock, Mail, User } from "lucide-react";
-import Image from "next/image";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 export default function SettingsClient() {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [error, setError] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 
   const {
     data: user,
@@ -24,6 +26,8 @@ export default function SettingsClient() {
     queryKey: ['myUser'],
     queryFn: getMyInformations,
   });
+
+  const uploadAvatar = useUploadAvatar();
 
   const [name, setName] = useState<string | undefined>(undefined);
   const [bio, setBio] = useState<string | undefined>(undefined);
@@ -49,6 +53,37 @@ export default function SettingsClient() {
       setError("Erro ao atualizar perfil. Tente novamente.");
     }
   });
+
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      setError('Por favor, selecione uma imagem válida');
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setError('A imagem deve ter no máximo 5MB');
+      return;
+    }
+
+    const preview = URL.createObjectURL(file);
+    setAvatarPreview(preview);
+
+    uploadAvatar.mutate(file, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['myProfile'] });
+        queryClient.invalidateQueries({ queryKey: ['myUser'] });
+      },
+      onSettled: () => {
+        setAvatarPreview(null);
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
+      }
+    });
+  };
 
   const handleSave = () => {
     setError("");
@@ -104,6 +139,16 @@ export default function SettingsClient() {
     );
   }
 
+  const getAvatarUrl = () => {
+    if (avatarPreview) return avatarPreview;
+    if (user?.avatar) {
+      if (user.avatar.startsWith('http')) return user.avatar;
+      const fullUrl = `http://localhost:3000${user.avatar}`;
+      return fullUrl;
+    }
+    return '/profilePicture.png';
+  };
+
   return (
     <>
       <DialogNoCloseButton
@@ -131,22 +176,36 @@ export default function SettingsClient() {
       <AuthGuard>
         <div className="h-screen w-lg bg-background">
           <div className="bg-card border border-border rounded-2xl shadow-lg overflow-hidden">
-            <div className="relative h-28 bg-linear-to-br from-primary/10 via-primary/5 to-transparent">
+            <div className="relative h-28 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent">
               <div className="absolute -bottom-16 left-8">
                 <div className="relative group">
                   <div className="w-32 h-32 rounded-full overflow-hidden ring-4 ring-background shadow-xl">
-                    <Image
-                      src="/profilePicture.png"
-                      alt="Profile Picture"
-                      width={128}
-                      height={128}
-                      className="object-cover w-full h-full"
-                    />
+                    <div className="w-32 h-32 rounded-full overflow-hidden ring-4 ring-background shadow-xl">
+                      <img
+                        src={getAvatarUrl()}
+                        alt="Profile Picture"
+                        className="object-cover w-full h-full"
+                      />
+                    </div>
                   </div>
-                  <button className=" absolute bottom-2 right-2 p-2.5 bg-primary text-primary-foreground rounded-full shadow-lg hover:scale-110 transition-transform">
-                    <Camera className="w-4 h-4" />
-                    <Input type="file" className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer hover:scale-110" />
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={uploadAvatar.isPending}
+                    className="absolute bottom-2 right-2 p-2.5 bg-primary text-primary-foreground rounded-full shadow-lg hover:scale-110 transition-transform disabled:opacity-50"
+                  >
+                    {uploadAvatar.isPending ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Camera className="w-4 h-4" />
+                    )}
                   </button>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleAvatarChange}
+                    className="hidden"
+                  />
                 </div>
               </div>
             </div>

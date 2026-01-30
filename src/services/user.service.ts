@@ -42,3 +42,15 @@ export const getPostByUserId = async (id: number) => {
   const { data } = await api.get(`/user/${id}/posts`);
   return data;
 };
+
+export const uploadAvatar = async (file: File): Promise<{ avatarUrl: string }> => {
+  const formData = new FormData();
+  formData.append('avatar', file);
+
+  const { data } = await api.post("/user/avatar", formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return data;
+};
