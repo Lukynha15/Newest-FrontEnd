@@ -87,7 +87,7 @@ export function UserSearch() {
                   <button
                     key={user.id}
                     onClick={() => handleUserClick(user.id)}
-                    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-accent transition-colors text-left"
+                    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-accent transition-colors text-left cursor-pointer"
                   >
                     <div className="w-12 h-12 rounded-full overflow-hidden bg-muted shrink-0 ring-2 ring-background">
                       {avatarUrl ? (
