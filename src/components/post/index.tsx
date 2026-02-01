@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { useState } from 'react';
 
 interface PostProps {
-  id: number;
+  id: string;
   username: string;
   avatar?: string;
   createdAt: string;
@@ -49,7 +49,7 @@ export default function Post({
       setLocalLikesCount(data.likesCount);
       queryClient.invalidateQueries({ queryKey: ['posts'] });
       queryClient.invalidateQueries({ queryKey: ['myPosts'] });
-      queryClient.invalidateQueries({ queryKey: ['post', id.toString()] });
+      queryClient.invalidateQueries({ queryKey: ['post', id] });
     },
     onError: () => {
       setLocalIsLiked(!localIsLiked);

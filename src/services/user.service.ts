@@ -33,12 +33,12 @@ export const searchUsers = async (query: string) => {
   return data;
 };
 
-export const getUserById = async (id: number) => {
+export const getUserById = async (id: string) => {
   const { data } = await api.get(`/user/${id}`);
   return data;
 };
 
-export const getPostByUserId = async (id: number) => {
+export const getPostByUserId = async (id: string) => {
   const { data } = await api.get(`/user/${id}/posts`);
   return data;
 };

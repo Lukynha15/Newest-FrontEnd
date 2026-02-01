@@ -337,7 +337,7 @@ export default function SettingsClient() {
                   <button
                     onClick={handleSave}
                     disabled={mutation.isPending}
-                    className="flex-1 h-12 bg-primary text-primary-foreground rounded-lg font-medium hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    className="cursor-pointer flex-1 h-12 bg-primary text-primary-foreground rounded-lg font-medium hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
                     {mutation.isPending ? (
                       <>
@@ -352,7 +352,7 @@ export default function SettingsClient() {
                     )}
                   </button>
 
-                  <button className="flex-1 sm:flex-none h-12 px-6 bg-destructive text-destructive-foreground rounded-lg font-medium hover:opacity-90 transition-all flex items-center justify-center gap-2">
+                  <button className="cursor-pointer flex-1 sm:flex-none h-12 px-6 bg-destructive text-destructive-foreground rounded-lg font-medium hover:opacity-90 transition-all flex items-center justify-center gap-2">
                     <AlertCircle className="h-4 w-4" />
                     Deletar Conta
                   </button>

@@ -115,7 +115,7 @@ export default function HomeClient() {
           {posts?.map(post => (
             <Post
               key={`${post.id}-${post.isLiked}`}
-              id={Number(post.id)}
+              id={post.id}
               username={post.author.name}
               avatar={post.author.avatar}
               createdAt={formatDate(post.createdAt)}

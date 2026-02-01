@@ -156,7 +156,7 @@ export default function ProfileClient() {
                 {posts?.map(post => (
                   <Post
                     key={`${post.id}-${post.isLiked}`}
-                    id={Number(post.id)}
+                    id={post.id}
                     username={post.author.name}
                     createdAt={formatDate(post.createdAt)}
                     title={post.title}

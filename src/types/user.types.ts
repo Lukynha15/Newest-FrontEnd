@@ -1,5 +1,5 @@
 export interface User {
-  id: number;
+  id: string;
   name: string;
   avatar?: string;
   createdAt: string;
@@ -9,7 +9,7 @@ export interface User {
 }
 
 export interface UserSettings {
-  id: number;
+  id: string;
   name: string;
   avatar?: string;
   bio: string;

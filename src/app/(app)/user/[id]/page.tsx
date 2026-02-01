@@ -21,7 +21,7 @@ export default function UserPage() {
     isError: isErrorUser,
   } = useQuery({
     queryKey: ['user', userId],
-    queryFn: () => getUserById(Number(userId)),
+    queryFn: () => getUserById(userId),
     enabled: !!userId,
   });
 
@@ -32,7 +32,7 @@ export default function UserPage() {
     error: errorPosts
   } = useQuery({
     queryKey: ['userPosts', userId],
-    queryFn: () => getPostByUserId(Number(userId)),
+    queryFn: () => getPostByUserId(userId),
     enabled: !!userId,
   });
 
@@ -94,7 +94,7 @@ export default function UserPage() {
                 {posts.map((post: PostDTO) => (
                   <Post
                     key={`${post.id}-${post.isLiked}`}
-                    id={Number(post.id)}
+                    id={post.id}
                     username={post.author?.name}
                     createdAt={formatDate(post.createdAt)}
                     title={post.title || ""}

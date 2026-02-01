@@ -19,7 +19,7 @@ export const createPost = async (postData: {
   return data;
 };
 
-export const toggleLike = async (postId: number) => {
+export const toggleLike = async (postId: string) => {
   const { data } = await api.patch(`/posts/${postId}/like`);
   return data;
 };

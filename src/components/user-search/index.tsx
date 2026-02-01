@@ -11,7 +11,7 @@ import { useDebounce } from '@/hooks/use-debounce';
 import { cn } from '@/lib/utils';
 
 interface SearchedUser {
-  id: number;
+  id: string;
   name: string;
   email: string;
   avatar: string | null;
@@ -39,7 +39,7 @@ export function UserSearch() {
 
   const showResults = isFocused && query.length > 0;
 
-  const handleUserClick = (userId: number) => {
+  const handleUserClick = (userId: string) => {
     router.push(`/user/${userId}`);
     setQuery('');
     setIsFocused(false);

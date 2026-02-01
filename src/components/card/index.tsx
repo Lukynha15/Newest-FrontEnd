@@ -18,7 +18,7 @@ import { Check, CircleX, Camera, X } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { DialogNoCloseButton } from "../dialog"
 
-export function CardDemo() {
+  export function CardDemo() {
   const { register } = useAuth();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
