@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowBigLeft, Home, Search, Settings, UserPen } from "lucide-react";
+import { ArrowBigLeft, Bell, Home, Search, Settings, UserPen } from "lucide-react";
 
 import {
   Sidebar,
@@ -18,6 +18,7 @@ import { useAuth } from "@/hooks/useAuth";
 const items = [
   { title: "Página Inicial", url: "/home", icon: Home },
   { title: "Procurar", url: "/search", icon: Search },
+  { title: "Notificações", url: "/notification", icon: Bell },
   { title: "Perfil", url: "/profile", icon: UserPen },
   { title: "Configurações", url: "/settings", icon: Settings }
 ];
