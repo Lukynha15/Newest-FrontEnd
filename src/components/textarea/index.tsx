@@ -8,5 +8,5 @@ interface TextareaDemoProps {
 }
 
 export function TextareaDemo({ placeholder, value, onChange, className }: TextareaDemoProps) {
-  return <Textarea placeholder={placeholder} value={value} onChange={onChange} className={className} />
+  return <Textarea placeholder={placeholder} value={value} onChange={onChange} className={className}/>
 }

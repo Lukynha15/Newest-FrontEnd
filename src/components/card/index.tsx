@@ -8,22 +8,21 @@ import {
   CardTitle
 } from "@/components/ui/card"
 
-import { FormEvent, useState, useRef } from "react"
+import { useRef, useState } from "react"
 import { Input } from "../ui/input"
 import { Label } from "../ui/label"
 import { Textarea } from "../ui/textarea"
 
 import { useAuth } from "@/hooks/useAuth"
-import { Check, CircleX, Camera, X } from "lucide-react"
+import { RegisterFormData, RegisterSchema } from "@/schemas/register.schemas"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Camera, Check, CircleX, X } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { useForm } from "react-hook-form"
 import { DialogNoCloseButton } from "../dialog"
 
-  export function CardDemo() {
-  const { register } = useAuth();
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [bio, setBio] = useState('');
+export function CardDemo() {
+  const { register: registerUser } = useAuth();
   const [avatar, setAvatar] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -31,6 +30,14 @@ import { DialogNoCloseButton } from "../dialog"
   const [openError, setOpenError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const router = useRouter();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(RegisterSchema),
+  });
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -61,18 +68,16 @@ import { DialogNoCloseButton } from "../dialog"
     }
   };
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-
+  const onSubmit = async (data: RegisterFormData) => {
     try {
-      await register(name, email, password, bio, avatar);
+      await registerUser(data.name, data.email, data.password, data.bio, avatar);
       setOpenSucess(true);
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
-      setErrorMessage('Email já em uso!');
+      setErrorMessage(error?.response?.data?.message || 'Erro ao criar conta');
       setOpenError(true);
     }
-  }
+  };
 
   function handleCloseSucess() {
     setOpenSucess(false);
@@ -88,9 +93,9 @@ import { DialogNoCloseButton } from "../dialog"
       <DialogNoCloseButton
         open={openError}
         onClose={handleCloseError}
-        title={errorMessage || "Email já em uso!"}
-        description="O email informado já está cadastrado no nosso sistema."
-        icon={<CircleX className="text-red-500"/>}
+        title={errorMessage || "Erro ao criar conta"}
+        description="Verifique os dados e tente novamente."
+        icon={<CircleX className="text-red-500" />}
         showCancelButton={false}
         textButton="Entendi"
       />
@@ -110,16 +115,16 @@ import { DialogNoCloseButton } from "../dialog"
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center gap-4">
                 <Label>Foto de perfil (opcional)</Label>
                 <div className="relative group">
                   <div className="w-24 h-24 rounded-full overflow-hidden ring-4 ring-background shadow-lg bg-muted">
                     {avatarPreview ? (
-                      <img 
-                        src={avatarPreview} 
-                        alt="Preview" 
+                      <img
+                        src={avatarPreview}
+                        alt="Preview"
                         className="object-cover w-full h-full"
                       />
                     ) : (
@@ -161,61 +166,61 @@ import { DialogNoCloseButton } from "../dialog"
                 <Label htmlFor="name">Usuário</Label>
                 <Input
                   id="name"
-                  name="name"
                   type="text"
-                  value={name}
-                  onChange={e => setName(e.target.value)}
                   placeholder="Fulano"
-                  required
+                  {...register('name')}
                 />
+                {errors.name && (
+                  <p className="text-sm text-destructive">{errors.name.message}</p>
+                )}
               </div>
 
               <div className="grid gap-2">
                 <Label htmlFor="bio">Biografia (opcional)</Label>
                 <Textarea
                   id="bio"
-                  value={bio}
-                  onChange={e => setBio(e.target.value)}
                   placeholder="Conte um pouco sobre você..."
                   className="resize-none h-20"
+                  {...register('bio')}
                 />
+                {errors.bio && (
+                  <p className="text-sm text-destructive">{errors.bio.message}</p>
+                )}
               </div>
 
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  name="email"
                   type="email"
                   placeholder="meuemail@exemplo.com"
-                  required
+                  {...register('email')}
                 />
+                {errors.email && (
+                  <p className="text-sm text-destructive">{errors.email.message}</p>
+                )}
               </div>
 
               <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Senha</Label>
-                </div>
+                <Label htmlFor="password">Senha</Label>
                 <Input
                   id="password"
-                  name="password"
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
                   type="password"
                   placeholder="••••••••"
-                  required
+                  {...register('password')}
                 />
+                {errors.password && (
+                  <p className="text-sm text-destructive">{errors.password.message}</p>
+                )}
               </div>
 
               <div>
-                <Button type="submit" className="w-full">
-                  Criar conta
+                <Button type="submit" className="w-full" disabled={isSubmitting}>
+                  {isSubmitting ? 'Criando conta...' : 'Criar conta'}
                 </Button>
-                <Button 
-                  type="button" 
-                  className="w-full mt-3" 
+                <Button
+                  type="button"
+                  className="w-full mt-3"
                   onClick={() => router.push('/login')}
                   variant="outline"
                 >
