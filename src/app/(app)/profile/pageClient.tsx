@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { AuthGuard } from "@/guard/AuthGuard";
 import { queryClient } from "@/lib/react-query";
 import { formatDate } from "@/lib/settings.date";
+import { CreatePostSchema } from "@/schemas/post.schemas";
 import { createPost, getMyPost } from "@/services/post.service";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AlertCircle, FileText, Loader2, NewspaperIcon } from "lucide-react";
@@ -18,45 +19,52 @@ export default function ProfileClient() {
   const [openNewPost, setOpenNewPost] = useState(false);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [errorState, setErrorState] = useState('');
+  const [errors, setErrors] = useState<{ title?: string; content?: string }>({});
 
   const mutation = useMutation({
     mutationFn: createPost,
     onSuccess: () => {
       setTitle('');
       setContent('');
-      setErrorState('');
+      setErrors({});
       setOpenNewPost(false);
 
       queryClient.invalidateQueries({ queryKey: ['posts'] });
+      queryClient.invalidateQueries({ queryKey: ['myPosts'] });
     },
-    onError: () => {
-      setErrorState('Erro ao criar post. Tente novamente.');
+    onError: (error: any) => {
+      console.error('Erro ao criar post:', error);
     },
   });
 
   function handleOpenNewPost() {
     setOpenNewPost(true);
-    setErrorState('');
+    setErrors({});
   }
 
   function handleCloseNewPost() {
     setOpenNewPost(false);
     setTitle('');
     setContent('');
-    setErrorState('');
+    setErrors({});
   }
 
   function handleSubmit() {
-    setErrorState('');
+    setErrors({});
 
-    if (!content.trim()) {
-      setErrorState('O conteúdo não pode estar vazio!');
+    const result = CreatePostSchema.safeParse({ title, content });
+
+    if (!result.success) {
+      const fieldErrors: { title?: string; content?: string } = {};
+      result.error.issues.forEach((err) => {
+        const field = err.path[0] as 'title' | 'content';
+        fieldErrors[field] = err.message;
+      });
+      setErrors(fieldErrors);
       return;
     }
 
     mutation.mutate({ title, content });
-    location.reload()
   }
 
   const {
@@ -81,24 +89,30 @@ export default function ProfileClient() {
         onSubmit={handleSubmit}
         disabled={mutation.isPending}
       >
-        <Input
-          placeholder="Título do post"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <TextareaDemo
-          placeholder="Conteúdo do post"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          className="h-36 resize-none w-full wrap-break-word whitespace-pre-wrap break-all"
-        />
-
-        {error && (
-          <div className="flex items-center gap-2 p-3 bg-red-100 border border-red-400 text-red-500 rounded-md">
-            <AlertCircle className="w-5 h-5" />
-            <span>{errorState}</span>
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Input
+              placeholder="Título do post"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+            {errors.title && (
+              <p className="text-sm text-destructive">{errors.title}</p>
+            )}
           </div>
-        )}
+
+          <div className="space-y-2">
+            <TextareaDemo
+              placeholder="Conteúdo do post"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              className="h-36 resize-none w-full wrap-break-word whitespace-pre-wrap break-all"
+            />
+            {errors.content && (
+              <p className="text-sm text-destructive">{errors.content}</p>
+            )}
+          </div>
+        </div>
       </DialogNoCloseButton>
 
       <ArticlePost>
@@ -158,6 +172,7 @@ export default function ProfileClient() {
                     key={`${post.id}-${post.isLiked}`}
                     id={post.id}
                     username={post.author.name}
+                    authorId={post.author.id}
                     createdAt={formatDate(post.createdAt)}
                     title={post.title}
                     content={post.content}

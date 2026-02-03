@@ -1,16 +1,23 @@
 'use client';
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown";
 import { settingsLike } from "@/lib/settings.like";
 import { cn } from "@/lib/utils";
-import { toggleLike } from '@/services/post.service';
+import { deletePost, toggleLike } from '@/services/post.service';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Clock, Heart, MessageCircle } from "lucide-react";
+import { Clock, Heart, MessageCircle, MoreVertical, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface PostProps {
   id: string;
   username: string;
+  authorId?: string;
   avatar?: string;
   createdAt: string;
   title: string;
@@ -24,6 +31,7 @@ interface PostProps {
 export default function Post({
   id,
   username,
+  authorId,
   avatar,
   createdAt,
   title,
@@ -38,7 +46,12 @@ export default function Post({
   const [localLikesCount, setLocalLikesCount] = useState(likes);
   const queryClient = useQueryClient();
 
-  const mutation = useMutation({
+  useEffect(() => {
+    setLocalIsLiked(isLiked);
+    setLocalLikesCount(likes);
+  }, [isLiked, likes]);
+
+  const likeMutation = useMutation({
     mutationFn: () => toggleLike(id),
     onMutate: async () => {
       setLocalIsLiked(!localIsLiked);
@@ -57,9 +70,24 @@ export default function Post({
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: () => deletePost(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['posts'] });
+      queryClient.invalidateQueries({ queryKey: ['myPosts'] });
+    },
+  });
+
   const handleLike = (e: React.MouseEvent) => {
     e.stopPropagation();
-    mutation.mutate();
+    likeMutation.mutate();
+  };
+
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (confirm('Tem certeza que deseja deletar este post?')) {
+      deleteMutation.mutate();
+    }
   };
 
   const handlePostClick = () => {
@@ -107,12 +135,34 @@ export default function Post({
           </div>
         </div>
 
-        {localLikesCount > 15 && (
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/10 border border-primary/20">
-            <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-            <span className="text-xs font-medium text-primary">Em alta</span>
-          </div>
-        )}
+        <div className="flex items-center gap-2">
+          {localLikesCount > 15 && (
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/10 border border-primary/20">
+              <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+              <span className="text-xs font-medium text-primary">Em alta</span>
+            </div>
+          )}
+
+          {authorId && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                <button className="p-2 hover:bg-accent rounded-lg transition-colors">
+                  <MoreVertical className="h-4 w-4" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem
+                  onClick={handleDelete}
+                  className="text-destructive focus:text-destructive cursor-pointer"
+                  disabled={deleteMutation.isPending}
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  {deleteMutation.isPending ? 'Deletando...' : 'Deletar post'}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+        </div>
       </header>
 
       <div className="space-y-3 mb-6">
@@ -127,7 +177,7 @@ export default function Post({
       <footer className="flex items-center gap-3">
         <button
           onClick={handleLike}
-          disabled={mutation.isPending}
+          disabled={likeMutation.isPending}
           className={cn(
             "flex items-center gap-2 px-5 py-2.5 rounded-xl font-medium text-sm",
             "transition-all duration-300 cursor-pointer hover:scale-110 h-full",
@@ -138,7 +188,7 @@ export default function Post({
         >
           <Heart className={cn(
             "h-4 w-4 transition-all duration-300",
-            localIsLiked && "fill-red-500 scale-110 "
+            localIsLiked && "fill-red-500 scale-110"
           )} />
           <span>{settingsLike(localLikesCount)}</span>
         </button>

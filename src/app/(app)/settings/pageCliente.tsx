@@ -8,13 +8,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { AuthGuard } from "@/guard/AuthGuard";
 import { queryClient } from "@/lib/react-query";
 import { getMyInformations, updateMyProfile, uploadAvatar } from "@/services/user.service";
+import { UpdateProfileSchema } from "@/schemas/settings.schema";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AlertCircle, Camera, CheckCircle, FileText, Loader2, Lock, Mail, User, X } from "lucide-react";
 import { useState, useRef } from "react";
 
 export default function SettingsClient() {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
@@ -53,12 +54,13 @@ export default function SettingsClient() {
       setShowSuccessModal(true);
       setPassword("");
       setConfirmPassword("");
-      setError("");
+      setErrors({});
       setAvatarPreview(null);
       setAvatarFile(null);
     },
-    onError: () => {
-      setError("Erro ao atualizar perfil. Tente novamente.");
+    onError: (error: any) => {
+      const message = error?.response?.data?.message || "Erro ao atualizar perfil. Tente novamente.";
+      setErrors({ general: message });
     }
   });
 
@@ -67,18 +69,19 @@ export default function SettingsClient() {
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {
-      setError('Por favor, selecione uma imagem válida');
+      setErrors({ avatar: 'Por favor, selecione uma imagem válida' });
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      setError('A imagem deve ter no máximo 5MB');
+      setErrors({ avatar: 'A imagem deve ter no máximo 5MB' });
       return;
     }
 
     const preview = URL.createObjectURL(file);
     setAvatarPreview(preview);
     setAvatarFile(file);
+    setErrors({});
   };
 
   const handleRemoveAvatar = () => {
@@ -90,34 +93,33 @@ export default function SettingsClient() {
   };
 
   const handleSave = () => {
-    setError("");
+    setErrors({});
 
-    const finalName = name ?? user?.name;
-    if (!finalName || finalName.trim() === "") {
-      setError("O nome de usuário não pode estar vazio!");
-      return;
-    }
+    const finalName = name ?? user?.name ?? "";
+    const finalEmail = email ?? user?.email ?? "";
+    const finalBio = bio ?? user?.bio ?? "";
 
-    const finalEmail = email ?? user?.email;
-    if (!finalEmail || finalEmail.trim() === "") {
-      setError("O email não pode estar vazio!");
-      return;
-    }
+    const result = UpdateProfileSchema.safeParse({
+      name: finalName,
+      email: finalEmail,
+      bio: finalBio,
+      password: password || '',
+      confirmPassword: confirmPassword || '',
+    });
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(finalEmail)) {
-      setError("Digite um email válido!");
-      return;
-    }
-
-    if (password && password !== confirmPassword) {
-      setError("As senhas não coincidem!");
+    if (!result.success) {
+      const fieldErrors: Record<string, string> = {};
+      result.error.issues.forEach((err) => {
+        const field = err.path[0] as string;
+        fieldErrors[field] = err.message;
+      });
+      setErrors(fieldErrors);
       return;
     }
 
     const updateData: any = {
       name: finalName.trim(),
-      bio: (bio ?? user?.bio ?? "").trim(),
+      bio: finalBio.trim(),
     };
 
     if (email !== undefined && email !== user?.email) {
@@ -216,6 +218,9 @@ export default function SettingsClient() {
                     className="hidden"
                   />
                 </div>
+                {errors.avatar && (
+                  <p className="text-sm text-destructive mt-2">{errors.avatar}</p>
+                )}
               </div>
             </div>
 
@@ -241,8 +246,10 @@ export default function SettingsClient() {
                       onChange={(e) => setName(e.target.value)}
                       placeholder="Digite seu nome"
                       className="h-12"
-                      required
                     />
+                    {errors.name && (
+                      <p className="text-sm text-destructive">{errors.name}</p>
+                    )}
                   </div>
 
                   <div className="space-y-2">
@@ -260,6 +267,9 @@ export default function SettingsClient() {
                     <p className="text-xs text-muted-foreground">
                       {currentBio.length} caracteres
                     </p>
+                    {errors.bio && (
+                      <p className="text-sm text-destructive">{errors.bio}</p>
+                    )}
                   </div>
                 </div>
 
@@ -284,8 +294,10 @@ export default function SettingsClient() {
                       type="email"
                       placeholder="seu@email.com"
                       className="h-12"
-                      required
                     />
+                    {errors.email && (
+                      <p className="text-sm text-destructive">{errors.email}</p>
+                    )}
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -302,6 +314,9 @@ export default function SettingsClient() {
                         placeholder="Mínimo 6 caracteres"
                         className="h-12"
                       />
+                      {errors.password && (
+                        <p className="text-sm text-destructive">{errors.password}</p>
+                      )}
                     </div>
 
                     <div className="space-y-2">
@@ -317,6 +332,9 @@ export default function SettingsClient() {
                         placeholder="Digite novamente"
                         className="h-12"
                       />
+                      {errors.confirmPassword && (
+                        <p className="text-sm text-destructive">{errors.confirmPassword}</p>
+                      )}
                     </div>
                   </div>
 
@@ -326,10 +344,10 @@ export default function SettingsClient() {
                   </p>
                 </div>
 
-                {error && (
+                {errors.general && (
                   <div className="flex items-center gap-2 p-3 bg-destructive/10 border border-destructive/20 text-destructive rounded-lg">
                     <AlertCircle className="h-5 w-5 shrink-0" />
-                    <span className="text-sm">{error}</span>
+                    <span className="text-sm">{errors.general}</span>
                   </div>
                 )}
 

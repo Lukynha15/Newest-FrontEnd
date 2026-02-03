@@ -7,6 +7,7 @@ export interface PostDTO {
   likes: number;
   comments: number;
   author: {
+    id: string;
     name: string;
     avatar: string;
   };

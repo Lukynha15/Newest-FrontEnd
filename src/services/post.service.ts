@@ -33,3 +33,8 @@ export const getUserPosts = async (userId: string) => {
   const { data } = await api.get(`/posts/user/${userId}`);
   return data;
 };
+
+export const deletePost = async (postId: string) => {
+  const { data } = await api.delete(`/posts/${postId}`);
+  return data;
+};
