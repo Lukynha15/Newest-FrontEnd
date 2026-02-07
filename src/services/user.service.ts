@@ -43,14 +43,21 @@ export const getPostByUserId = async (id: string) => {
   return data;
 };
 
-export const uploadAvatar = async (file: File): Promise<{ avatarUrl: string }> => {
+export const uploadAvatar = async (
+  file: File,
+): Promise<{ avatarUrl: string }> => {
   const formData = new FormData();
-  formData.append('avatar', file);
+  formData.append("avatar", file);
 
   const { data } = await api.post("/user/avatar", formData, {
     headers: {
-      'Content-Type': 'multipart/form-data',
+      "Content-Type": "multipart/form-data",
     },
   });
+  return data;
+};
+
+export const deleteMyAccount = async () => {
+  const { data } = await api.delete("/user/me");
   return data;
 };

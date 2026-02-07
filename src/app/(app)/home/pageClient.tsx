@@ -5,20 +5,24 @@ import { DialogNoCloseButton } from "@/components/dialog";
 import Post from "@/components/post";
 import { TextareaDemo } from "@/components/textarea";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { AuthGuard } from "@/guard/AuthGuard";
 import { usePosts } from "@/hooks/usePost";
 import { formatDate } from "@/lib/settings.date";
-import { CreatePostSchema } from "@/schemas/post.schemas";
 import { createPost } from "@/services/post.service";
+import { CreatePostSchema } from "@/schemas/post.schemas";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { CirclePlus, Loader2, NewspaperIcon } from "lucide-react";
-import { useState } from "react";
+import { CirclePlus, Loader2, NewspaperIcon, ImagePlus, X } from "lucide-react";
+import { useState, useRef } from "react";
 
 export default function HomeClient() {
   const [openNewPost, setOpenNewPost] = useState(false);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [errors, setErrors] = useState<{ title?: string; content?: string }>({});
+  const [image, setImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [errors, setErrors] = useState<{ title?: string; content?: string; image?: string }>({});
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { data: posts, isLoading } = usePosts();
   const queryClient = useQueryClient();
@@ -28,6 +32,8 @@ export default function HomeClient() {
     onSuccess: () => {
       setTitle('');
       setContent('');
+      setImage(null);
+      setImagePreview(null);
       setErrors({});
       setOpenNewPost(false);
 
@@ -38,6 +44,34 @@ export default function HomeClient() {
     },
   });
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      setErrors({ image: 'Por favor, selecione uma imagem válida' });
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setErrors({ image: 'A imagem deve ter no máximo 5MB' });
+      return;
+    }
+
+    setImage(file);
+    const preview = URL.createObjectURL(file);
+    setImagePreview(preview);
+    setErrors({});
+  };
+
+  const handleRemoveImage = () => {
+    setImage(null);
+    setImagePreview(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   function handleOpenNewPost() {
     setOpenNewPost(true);
     setErrors({});
@@ -47,6 +81,8 @@ export default function HomeClient() {
     setOpenNewPost(false);
     setTitle('');
     setContent('');
+    setImage(null);
+    setImagePreview(null);
     setErrors({});
   }
 
@@ -65,7 +101,7 @@ export default function HomeClient() {
       return;
     }
 
-    mutation.mutate({ title, content });
+    mutation.mutate({ title, content, image: image || undefined });
   }
 
   return (
@@ -83,7 +119,9 @@ export default function HomeClient() {
         >
           <div className="space-y-4">
             <div className="space-y-2">
+              <Label htmlFor="title">Título</Label>
               <Input
+                id="title"
                 placeholder="Título do post"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
@@ -94,6 +132,7 @@ export default function HomeClient() {
             </div>
 
             <div className="space-y-2">
+              <Label htmlFor="content">Conteúdo</Label>
               <TextareaDemo
                 placeholder="Conteúdo do post"
                 value={content}
@@ -102,6 +141,46 @@ export default function HomeClient() {
               />
               {errors.content && (
                 <p className="text-sm text-destructive">{errors.content}</p>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              {imagePreview ? (
+                <div className="relative">
+                  <img 
+                    src={imagePreview} 
+                    alt="Preview" 
+                    className="w-full h-48 object-cover rounded-lg border border-border"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleRemoveImage}
+                    className="absolute top-2 right-2 p-1.5 bg-destructive text-destructive-foreground rounded-full shadow-lg hover:scale-110 transition-transform"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-full h-32 border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center gap-2 hover:border-primary transition-colors cursor-pointer"
+                >
+                  <ImagePlus className="h-8 w-8 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">Clique para adicionar uma imagem</span>
+                </button>
+              )}
+
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="hidden"
+              />
+
+              {errors.image && (
+                <p className="text-sm text-destructive">{errors.image}</p>
               )}
             </div>
           </div>
@@ -135,6 +214,7 @@ export default function HomeClient() {
               createdAt={formatDate(post.createdAt)}
               title={post.title}
               content={post.content}
+              image={post.image}
               likes={post.likes}
               isLiked={post.isLiked}
               comments={post.comments}

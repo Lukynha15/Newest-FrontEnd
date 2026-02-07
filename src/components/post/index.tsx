@@ -24,6 +24,7 @@ interface PostProps {
   createdAt: string;
   title: string;
   content: string;
+  image?: string;
   likes: number;
   isLiked: boolean;
   comments: number;
@@ -38,6 +39,7 @@ export default function Post({
   createdAt,
   title,
   content,
+  image,
   likes,
   isLiked,
   comments,
@@ -117,6 +119,12 @@ export default function Post({
     return '/profilePicture.png';
   };
 
+  const getImageUrl = () => {
+    if (!image) return null;
+    if (image.startsWith('http')) return image;
+    return `http://localhost:3000${image}`;
+  };
+
   return (
     <>
       <DialogNoCloseButton
@@ -173,7 +181,7 @@ export default function Post({
             {isOwner && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                  <button className="p-2 hover:bg-accent rounded-lg transition-colors">
+                  <button className="p-2 hover:bg-accent rounded-lg transition-colors cursor-pointer">
                     <MoreVertical className="h-4 w-4" />
                   </button>
                 </DropdownMenuTrigger>
@@ -192,12 +200,24 @@ export default function Post({
         </header>
 
         <div className="space-y-3 mb-6">
-          <h2 className="text-xl font-bold leading-snug">
-            {title}
-          </h2>
+          {title && (
+            <h2 className="text-xl font-bold leading-snug">
+              {title}
+            </h2>
+          )}
           <p className="text-sm text-muted-foreground leading-relaxed">
             {content}
           </p>
+
+          {getImageUrl() && (
+            <div className="mt-4 rounded-xl overflow-hidden border border-border">
+              <img 
+                src={getImageUrl()!} 
+                alt={title || 'Post image'} 
+                className="w-full h-auto object-cover"
+              />
+            </div>
+          )}
         </div>
 
         <footer className="flex items-center gap-3">

@@ -95,6 +95,8 @@ export default function UserPage() {
                   <Post
                     key={`${post.id}-${post.isLiked}`}
                     id={post.id}
+                    image={post.image}
+                    authorId={post.author.id}
                     username={post.author?.name}
                     createdAt={formatDate(post.createdAt)}
                     title={post.title || ""}

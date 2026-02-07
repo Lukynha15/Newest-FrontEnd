@@ -14,8 +14,19 @@ export async function getMyPost(): Promise<PostDTO[]> {
 export const createPost = async (postData: {
   title?: string;
   content: string;
+  image?: File;
 }) => {
-  const { data } = await api.post("/posts", postData);
+  const formData = new FormData();
+
+  if (postData.title) formData.append("title", postData.title);
+  formData.append("content", postData.content);
+  if (postData.image) formData.append("image", postData.image);
+
+  const { data } = await api.post("/posts", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
   return data;
 };
 

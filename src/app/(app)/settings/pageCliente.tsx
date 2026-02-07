@@ -7,14 +7,17 @@ import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { AuthGuard } from "@/guard/AuthGuard";
 import { queryClient } from "@/lib/react-query";
-import { getMyInformations, updateMyProfile, uploadAvatar } from "@/services/user.service";
 import { UpdateProfileSchema } from "@/schemas/settings.schema";
+import { deleteMyAccount, getMyInformations, updateMyProfile, uploadAvatar } from "@/services/user.service";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { AlertCircle, Camera, CheckCircle, FileText, Loader2, Lock, Mail, User, X } from "lucide-react";
-import { useState, useRef } from "react";
+import { AlertCircle, AlertTriangle, Camera, CheckCircle, FileText, Loader2, Lock, Mail, User, X } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useRef, useState } from "react";
 
 export default function SettingsClient() {
+  const router = useRouter();
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
@@ -61,6 +64,19 @@ export default function SettingsClient() {
     onError: (error: any) => {
       const message = error?.response?.data?.message || "Erro ao atualizar perfil. Tente novamente.";
       setErrors({ general: message });
+    }
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteMyAccount,
+    onSuccess: () => {
+      localStorage.removeItem('token');
+      router.push('/');
+    },
+    onError: (error: any) => {
+      const message = error?.response?.data?.message || "Erro ao deletar conta. Tente novamente.";
+      setErrors({ general: message });
+      setShowDeleteModal(false);
     }
   });
 
@@ -133,6 +149,18 @@ export default function SettingsClient() {
     mutation.mutate(updateData);
   };
 
+  const handleDeleteClick = () => {
+    setShowDeleteModal(true);
+  };
+
+  const handleConfirmDelete = () => {
+    deleteMutation.mutate();
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteModal(false);
+  };
+
   const handleCloseSuccessModal = () => {
     setShowSuccessModal(false);
   };
@@ -178,10 +206,23 @@ export default function SettingsClient() {
         onSubmit={handleCloseSuccessModal}
       />
 
+      <DialogNoCloseButton
+        open={showDeleteModal}
+        onClose={handleCancelDelete}
+        title="Deletar conta permanentemente?"
+        description="Esta ação não pode ser desfeita. Todos os seus dados, posts e comentários serão permanentemente removidos."
+        icon={<AlertTriangle className="h-6 w-6 text-destructive" />}
+        textButton={deleteMutation.isPending ? "Deletando..." : "Deletar minha conta"}
+        onSubmit={handleConfirmDelete}
+        disabled={deleteMutation.isPending}
+        showCancelButton={true}
+        showSubmitButton={true}
+      />
+
       <AuthGuard>
         <div className="h-screen w-lg bg-background">
           <div className="bg-card border border-border rounded-2xl shadow-lg overflow-hidden">
-            <div className="relative h-28 bg-linear-to-br from-primary/10 via-primary/5 to-transparent">
+            <div className="relative h-28 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent">
               <div className="absolute -bottom-16 left-8">
                 <div className="relative group">
                   <div className="w-32 h-32 rounded-full overflow-hidden ring-4 ring-background shadow-xl">
@@ -192,7 +233,7 @@ export default function SettingsClient() {
                     />
                   </div>
 
-                  <button 
+                  <button
                     onClick={() => fileInputRef.current?.click()}
                     disabled={mutation.isPending}
                     className="absolute bottom-2 right-2 p-2.5 bg-primary text-primary-foreground rounded-full shadow-lg hover:scale-110 transition-transform disabled:opacity-50"
@@ -201,7 +242,7 @@ export default function SettingsClient() {
                   </button>
 
                   {avatarPreview && (
-                    <button 
+                    <button
                       onClick={handleRemoveAvatar}
                       className="absolute cursor-pointer top-2 right-2 p-1.5 bg-destructive text-destructive-foreground rounded-full shadow-lg hover:scale-110 transition-transform"
                       title="Remover alteração"
@@ -370,7 +411,10 @@ export default function SettingsClient() {
                     )}
                   </button>
 
-                  <button className="cursor-pointer flex-1 sm:flex-none h-12 px-6 bg-destructive text-destructive-foreground rounded-lg font-medium hover:opacity-90 transition-all flex items-center justify-center gap-2">
+                  <button
+                    onClick={handleDeleteClick}
+                    className="cursor-pointer flex-1 sm:flex-none h-12 px-6 bg-destructive text-destructive-foreground rounded-lg font-medium hover:opacity-90 transition-all flex items-center justify-center gap-2"
+                  >
                     <AlertCircle className="h-4 w-4" />
                     Deletar Conta
                   </button>

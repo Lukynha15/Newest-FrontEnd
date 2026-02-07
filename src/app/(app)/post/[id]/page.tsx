@@ -34,6 +34,7 @@ export default function PostPage() {
           createdAt={new Date(post.createdAt).toLocaleDateString('pt-BR')}
           authorId={post.author.id}
           title={post.title}
+          image={post.image}
           content={post.content}
           likes={post.likes}
           isLiked={post.isLiked}
