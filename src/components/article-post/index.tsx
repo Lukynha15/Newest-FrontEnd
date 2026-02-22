@@ -9,14 +9,13 @@ export default function ArticlePost({ children, className }: ArticlePostProps) {
   return (
     <div 
       className={cn(
-        "w-xl h-screen",
-        "bg-card border-x border-border",
-        "shadow-sm",
+        "w-full min-h-screen",
+        "bg-background",
         "overflow-y-auto custom-scrollbar",
         className
       )}
     >
       {children}
     </div>
-  );
+  );  
 }

@@ -10,7 +10,7 @@ export default function SearchPageClient() {
   return (
     <AuthGuard>
       <ArticlePost>
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-6 bg-neutral-900 h-dvh">
           <div className="space-y-2 ">
             <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
               <SearchIcon className="h-8 w-8 text-primary" />

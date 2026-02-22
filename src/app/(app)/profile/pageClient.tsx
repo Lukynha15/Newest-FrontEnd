@@ -116,11 +116,11 @@ export default function ProfileClient() {
       </DialogNoCloseButton>
 
       <ArticlePost>
-        <div className="z-10 bg-card/95 backdrop-blur-md border-b border-border">
+        <div className="z-10 bg-card/95 backdrop-blur-md border-b border-border rounded-b-2xl">
           <ProfileCard />
         </div>
 
-        <div className="p-6 pt-4 space-y-4">
+        <div className="pt-4 space-y-4">
           {isLoading && (
             <div className="flex flex-col items-center justify-center py-16 space-y-4">
               <Loader2 className="h-8 w-8 animate-spin text-primary" />

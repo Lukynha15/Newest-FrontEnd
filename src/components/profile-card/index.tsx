@@ -44,7 +44,7 @@ export default function ProfileCard() {
 
   return (
     <div className="relative">
-      <div className="h-32 bg-gradient-to-br from-primary/20 via-primary/10 to-background" />
+      <div className="h-32 bg-linear-to-br from-primary/20 via-primary/10 to-background " />
 
       <div className="px-6 pb-6">
         <div className="flex items-end justify-between -mt-16 mb-4">
@@ -70,7 +70,7 @@ export default function ProfileCard() {
           </Button>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-4 ">
           <div>
             <h1 className="text-2xl font-bold tracking-tight">{user?.name}</h1>
             <p className="text-muted-foreground">@{user?.name?.toLowerCase().replace(/\s+/g, '')}</p>

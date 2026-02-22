@@ -41,7 +41,7 @@ export default function UserProfileCard({ user, isLoading }: UserProfileCardProp
 
   return (
     <div className="relative">
-      <div className="h-32 bg-gradient-to-br from-primary/20 via-primary/10 to-background" />
+      <div className="h-32 bg-linear-to-br from-primary/20 via-primary/10 to-background" />
 
       <div className="px-6 pb-6">
         <div className="flex items-end justify-between -mt-16 mb-4">

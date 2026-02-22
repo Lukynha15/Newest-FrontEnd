@@ -3,9 +3,9 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { Geist, Geist_Mono } from "next/font/google";
 
+import { Toaster } from "@/components/ui/sonner";
 import { ReactQueryProvider } from "@/provider/ReactQueryProvider";
 import "../../app/globals.css";
-import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,11 +34,13 @@ export default function AppLayout({
     <ReactQueryProvider>
       <AuthProvider>
         <SidebarProvider>
-          <div className="flex min-h-screen">
+          <div className="flex min-h-screen w-full">
             <AppSidebar />
-            <main className="flex-1">
+            <main className="flex-1 flex justify-center items-start bg-background min-w-0">
               <Toaster />
-              {children}
+              <div className="w-full max-w-2xl">
+                {children}
+              </div>
             </main>
           </div>
         </SidebarProvider>
