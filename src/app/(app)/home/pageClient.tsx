@@ -155,7 +155,7 @@ export default function HomeClient() {
                   <button
                     type="button"
                     onClick={handleRemoveImage}
-                    className="absolute top-2 right-2 p-1.5 bg-destructive text-destructive-foreground rounded-full shadow-lg hover:scale-110 transition-transform"
+                    className="absolute cursor-pointer top-2 right-2 p-1.5 bg-destructive text-destructive-foreground rounded-full shadow-lg hover:scale-110 transition-transform"
                   >
                     <X className="w-4 h-4" />
                   </button>

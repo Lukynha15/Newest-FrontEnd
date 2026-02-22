@@ -1,12 +1,13 @@
-
 'use client';
 
 import ArticlePost from '@/components/article-post';
 import Post from '@/components/post';
+import CommentSection from '@/components/comment-section';
 import { AuthGuard } from '@/guard/AuthGuard';
 import { getPostById } from '@/services/post.service';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
+import { Loader2 } from 'lucide-react';
 
 export default function PostPage() {
   const { id } = useParams();
@@ -18,32 +19,47 @@ export default function PostPage() {
   });
 
   if (isLoading) {
-    return <div className="p-8">Carregando post...</div>;
+    return (
+      <AuthGuard>
+        <ArticlePost>
+          <div className="flex justify-center items-center min-h-screen">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        </ArticlePost>
+      </AuthGuard>
+    );
   }
 
   if (isError || !post) {
-    return <div className="p-8">Post não encontrado</div>;
+    return (
+      <AuthGuard>
+        <ArticlePost>
+          <div className="p-8 text-center">Post não encontrado</div>
+        </ArticlePost>
+      </AuthGuard>
+    );
   }
 
   return (
     <AuthGuard>
       <ArticlePost>
-        <Post
-          id={post.id}
-          username={post.author.name}
-          createdAt={new Date(post.createdAt).toLocaleDateString('pt-BR')}
-          authorId={post.author.id}
-          title={post.title}
-          image={post.image}
-          content={post.content}
-          likes={post.likes}
-          isLiked={post.isLiked}
-          comments={post.comments || 0}
-          clickable={false}
-          avatar={post.author.avatar}
-        />
-        <div className="mt-8">
-          <h2 className="text-xl font-bold mb-4">Comentários</h2>
+        <div className="space-y-6 p-6">
+          <Post
+            id={post.id}
+            username={post.author.name}
+            authorId={post.author.id}
+            createdAt={new Date(post.createdAt).toLocaleDateString('pt-BR')}
+            title={post.title}
+            content={post.content}
+            image={post.image}
+            likes={post.likes}
+            isLiked={post.isLiked}
+            comments={post.comments || 0}
+            clickable={false}
+            avatar={post.author.avatar}
+          />
+
+          <CommentSection postId={post.id} />
         </div>
       </ArticlePost>
     </AuthGuard>
