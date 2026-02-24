@@ -204,7 +204,7 @@ export default function HomeClient() {
             </div>
           )}
 
-          {posts?.map(post => (
+          {posts?.map(post => ( 
             <Post
               key={`${post.id}-${post.isLiked}`}
               id={post.id}
