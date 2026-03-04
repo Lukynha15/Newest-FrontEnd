@@ -1,14 +1,13 @@
 'use client';
 
-import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { searchUsers } from '@/services/user.service';
-import { getMyProfile } from '@/services/user.service';
 import { Input } from '@/components/ui/input';
-import { Search, Loader2, User } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { useDebounce } from '@/hooks/use-debounce';
 import { cn } from '@/lib/utils';
+import { getMyProfile, searchUsers } from '@/services/user.service';
+import { useQuery } from '@tanstack/react-query';
+import { Loader2, Search, User } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 interface SearchedUser {
   id: string;
@@ -47,8 +46,7 @@ export function UserSearch() {
 
   const getAvatarUrl = (avatar: string | null) => {
     if (!avatar) return null;
-    if (avatar.startsWith('http')) return avatar;
-    return `http://localhost:3000${avatar}`;
+    return avatar;
   };
 
   return (
@@ -82,7 +80,7 @@ export function UserSearch() {
             <div className="py-2">
               {filteredUsers.map((user) => {
                 const avatarUrl = getAvatarUrl(user.avatar);
-                
+
                 return (
                   <button
                     key={user.id}

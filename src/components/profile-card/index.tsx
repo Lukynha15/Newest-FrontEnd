@@ -1,15 +1,15 @@
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { formatDateLong } from "@/lib/settings.date";
 import { postSettings } from "@/lib/settings.post";
 import { getMyProfile } from "@/services/user.service";
 import { useQuery } from "@tanstack/react-query";
 import { Calendar, FileText, Settings } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
 export default function ProfileCard() {
   const router = useRouter();
-  
+
   const {
     data: user,
     isLoading
@@ -19,10 +19,7 @@ export default function ProfileCard() {
   });
 
   const getAvatarUrl = () => {
-    if (user?.avatar) {
-      if (user.avatar.startsWith('http')) return user.avatar;
-      return `http://localhost:3000${user.avatar}`;
-    }
+    if (user?.avatar) return user.avatar;
     return '/profilePicture.png';
   };
 
@@ -50,17 +47,17 @@ export default function ProfileCard() {
         <div className="flex items-end justify-between -mt-16 mb-4">
           <div className="relative group">
             <div className="w-32 h-32 rounded-full overflow-hidden ring-4 ring-background shadow-xl">
-              <img 
+              <img
                 src={getAvatarUrl()}
-                alt="Profile Picture" 
+                alt="Profile Picture"
                 className="object-cover w-full h-full"
               />
             </div>
             <div className="absolute bottom-2 right-2 w-5 h-5 bg-green-500 rounded-full border-4 border-background" />
           </div>
 
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             size="sm"
             onClick={() => router.push('/settings')}
             className="gap-2"
@@ -85,7 +82,7 @@ export default function ProfileCard() {
               <Calendar className="h-4 w-4" />
               <span>Desde {formatDateLong(user?.createdAt)}</span>
             </div>
-            
+
             <div className="flex items-center gap-1.5 text-muted-foreground">
               <FileText className="h-4 w-4" />
               <span>{postSettings(user?.totalPosts ?? 0)}</span>

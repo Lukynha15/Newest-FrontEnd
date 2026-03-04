@@ -15,7 +15,7 @@ export async function getMyPost(): Promise<PostDTO[]> {
 export const createPost = async (postData: {
   title?: string;
   content: string;
-  image?: File;
+  image?: string;
 }) => {
   const formData = new FormData();
 

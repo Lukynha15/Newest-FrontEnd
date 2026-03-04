@@ -1,9 +1,9 @@
 "use client"
 
+import { Skeleton } from "@/components/ui/skeleton";
 import { formatDateLong } from "@/lib/settings.date";
 import { postSettings } from "@/lib/settings.post";
 import { Calendar, FileText, User } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
 
 interface UserProfileCardProps {
   user: any;
@@ -12,10 +12,7 @@ interface UserProfileCardProps {
 
 export default function UserProfileCard({ user, isLoading }: UserProfileCardProps) {
   const getAvatarUrl = () => {
-    if (user?.avatar) {
-      if (user.avatar.startsWith('http')) return user.avatar;
-      return `http://localhost:3000${user.avatar}`;
-    }
+    if (user?.avatar) return user.avatar;
     return null;
   };
 
@@ -48,9 +45,9 @@ export default function UserProfileCard({ user, isLoading }: UserProfileCardProp
           <div className="relative group">
             <div className="w-32 h-32 rounded-full overflow-hidden ring-4 ring-background shadow-xl">
               {avatarUrl ? (
-                <img 
+                <img
                   src={avatarUrl}
-                  alt={user.name} 
+                  alt={user.name}
                   className="object-cover w-full h-full"
                 />
               ) : (
@@ -78,7 +75,7 @@ export default function UserProfileCard({ user, isLoading }: UserProfileCardProp
               <Calendar className="h-4 w-4" />
               <span>Desde {formatDateLong(user.createdAt)}</span>
             </div>
-            
+
             <div className="flex items-center gap-1.5 text-muted-foreground">
               <FileText className="h-4 w-4" />
               <span>{postSettings(user.totalPosts ?? 0)}</span>

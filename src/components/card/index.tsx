@@ -14,6 +14,8 @@ import { Label } from "../ui/label"
 import { Textarea } from "../ui/textarea"
 
 import { useAuth } from "@/hooks/useAuth"
+
+import { useCloudinaryUpload } from "@/hooks/use-cloudinary"
 import { RegisterFormData, RegisterSchema } from "@/schemas/register.schemas"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Camera, Check, CircleX, X } from "lucide-react"
@@ -29,6 +31,7 @@ export function CardDemo() {
   const [openSucess, setOpenSucess] = useState(false);
   const [openError, setOpenError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const { uploadImage, uploading } = useCloudinaryUpload();
   const router = useRouter();
 
   const {
@@ -70,7 +73,13 @@ export function CardDemo() {
 
   const onSubmit = async (data: RegisterFormData) => {
     try {
-      await registerUser(data.name, data.email, data.password, data.bio, avatar);
+      let avatarUrl: string | null = null;
+
+      if (avatar) {
+        avatarUrl = await uploadImage(avatar);
+      }
+
+      await registerUser(data.name, data.email, data.password, data.bio, avatarUrl);
       setOpenSucess(true);
     } catch (error: any) {
       console.log(error);
@@ -215,8 +224,8 @@ export function CardDemo() {
               </div>
 
               <div>
-                <Button type="submit" className="w-full" disabled={isSubmitting}>
-                  {isSubmitting ? 'Criando conta...' : 'Criar conta'}
+                <Button type="submit" className="w-full" disabled={isSubmitting || uploading}>
+                  {uploading ? 'Enviando imagem...' : isSubmitting ? 'Criando conta...' : 'Criar conta'}
                 </Button>
                 <Button
                   type="button"

@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { AuthGuard } from "@/guard/AuthGuard";
+import { useCloudinaryUpload } from "@/hooks/use-cloudinary";
 import { queryClient } from "@/lib/react-query";
 import { UpdateProfileSchema } from "@/schemas/settings.schema";
 import { deleteMyAccount, getMyInformations, updateMyProfile, uploadAvatar } from "@/services/user.service";
@@ -36,6 +37,7 @@ export default function SettingsClient() {
   const [email, setEmail] = useState<string | undefined>(undefined);
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const { uploadImage, uploading } = useCloudinaryUpload();
 
   const currentName = name ?? user?.name ?? "";
   const currentBio = bio ?? user?.bio ?? "";
@@ -46,7 +48,8 @@ export default function SettingsClient() {
     onSuccess: async () => {
       if (avatarFile) {
         try {
-          await uploadAvatar(avatarFile);
+          const avatarUrl = await uploadImage(avatarFile);
+          await uploadAvatar(avatarUrl);
         } catch (err) {
           console.error('Erro ao fazer upload do avatar:', err);
         }
@@ -175,10 +178,7 @@ export default function SettingsClient() {
 
   const getAvatarUrl = () => {
     if (avatarPreview) return avatarPreview;
-    if (user?.avatar) {
-      if (user.avatar.startsWith('http')) return user.avatar;
-      return `http://localhost:3000${user.avatar}`;
-    }
+    if (user?.avatar) return user.avatar;
     return '/profilePicture.png';
   };
 

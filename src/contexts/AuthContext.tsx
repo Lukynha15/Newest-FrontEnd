@@ -9,7 +9,7 @@ interface AuthContextData {
   isAuthenticated: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   logout: () => void;
-  register: (name: string, email: string, password: string, bio?: string, avatar?: File | null) => Promise<void>;
+  register: (name: string, email: string, password: string, bio?: string, avatarUrl?: string | null) => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextData>(
@@ -44,23 +44,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     window.location.href = "/home";
   }
 
-  async function register(name: string, email: string, password: string, bio?: string, avatar?: File | null) {
-    if (avatar || bio) {
-      const formData = new FormData();
-      formData.append('name', name);
-      formData.append('email', email);
-      formData.append('password', password);
-      if (bio) formData.append('bio', bio);
-      if (avatar) formData.append('avatar', avatar);
-
-      await api.post("user", formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-    } else {
-      await api.post("user", { name, email, password });
-    }
+  async function register(name: string, email: string, password: string, bio?: string, avatarUrl?: string | null) {
+    await api.post("user", {
+      name,
+      email,
+      password,
+      ...(bio && { bio }),
+      ...(avatarUrl && { avatar: avatarUrl }),
+    });
   }
 
   async function logout() {
@@ -69,7 +60,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     delete api.defaults.headers.common.Authorization;
 
     setIsAuthenticated(false);
-    
+
     window.location.href = "/login";
   }
 

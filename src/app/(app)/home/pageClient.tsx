@@ -7,13 +7,14 @@ import { TextareaDemo } from "@/components/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AuthGuard } from "@/guard/AuthGuard";
+import { useCloudinaryUpload } from "@/hooks/use-cloudinary";
 import { usePosts } from "@/hooks/usePost";
 import { formatDate } from "@/lib/settings.date";
-import { createPost } from "@/services/post.service";
 import { CreatePostSchema } from "@/schemas/post.schemas";
+import { createPost } from "@/services/post.service";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { CirclePlus, Loader2, NewspaperIcon, ImagePlus, X } from "lucide-react";
-import { useState, useRef } from "react";
+import { CirclePlus, ImagePlus, Loader2, NewspaperIcon, X } from "lucide-react";
+import { useRef, useState } from "react";
 
 export default function HomeClient() {
   const [openNewPost, setOpenNewPost] = useState(false);
@@ -23,6 +24,7 @@ export default function HomeClient() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [errors, setErrors] = useState<{ title?: string; content?: string; image?: string }>({});
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { uploadImage, uploading } = useCloudinaryUpload();
 
   const { data: posts, isLoading } = usePosts();
   const queryClient = useQueryClient();
@@ -86,7 +88,7 @@ export default function HomeClient() {
     setErrors({});
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
     setErrors({});
 
     const result = CreatePostSchema.safeParse({ title, content });
@@ -101,7 +103,12 @@ export default function HomeClient() {
       return;
     }
 
-    mutation.mutate({ title, content, image: image || undefined });
+    let imageUrl: string | undefined;
+    if (image) {
+      imageUrl = await uploadImage(image);
+    }
+
+    mutation.mutate({ title, content, image: imageUrl });
   }
 
   return (
@@ -113,9 +120,9 @@ export default function HomeClient() {
           title="O que deseja postar?"
           description="Preencha os campos abaixo para criar um novo post."
           icon={<NewspaperIcon />}
-          textButton={mutation.isPending ? "Postando..." : "Postar"}
           onSubmit={handleSubmit}
-          disabled={mutation.isPending}
+          textButton={mutation.isPending || uploading ? "Postando..." : "Postar"}
+          disabled={mutation.isPending || uploading}
         >
           <div className="space-y-4">
             <div className="space-y-2">
@@ -147,9 +154,9 @@ export default function HomeClient() {
             <div className="space-y-2">
               {imagePreview ? (
                 <div className="relative">
-                  <img 
-                    src={imagePreview} 
-                    alt="Preview" 
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
                     className="w-full h-48 object-cover rounded-lg border border-border"
                   />
                   <button
@@ -204,7 +211,7 @@ export default function HomeClient() {
             </div>
           )}
 
-          {posts?.map(post => ( 
+          {posts?.map(post => (
             <Post
               key={`${post.id}-${post.isLiked}`}
               id={post.id}
