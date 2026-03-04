@@ -1,5 +1,5 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { uploadAvatar } from '@/services/user.service';
+import { uploadAvatar } from "@/services/user.service";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 export function useUploadAvatar() {
@@ -7,16 +7,13 @@ export function useUploadAvatar() {
 
   return useMutation({
     mutationFn: uploadAvatar,
-    onSuccess: (data) => {
-      queryClient.setQueryData(['myProfile'], (oldData: any) => ({
-        ...oldData,
-        avatarUrl: data.avatarUrl,
-      }));
-
-      toast.success('Avatar atualizado com sucesso!');
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["myProfile"] });
+      queryClient.invalidateQueries({ queryKey: ["myUser"] });
+      toast.success("Avatar atualizado com sucesso!");
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || 'Erro ao atualizar avatar');
+      toast.error(error?.response?.data?.message || "Erro ao atualizar avatar");
     },
   });
 }
