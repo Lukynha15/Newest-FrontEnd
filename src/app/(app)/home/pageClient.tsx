@@ -194,8 +194,8 @@ export default function HomeClient() {
         </DialogNoCloseButton>
 
         <ArticlePost>
-          <div className="border-b-2 bg-neutral-900 p-4 flex justify-between items-center rounded-2xl mb-2">
-            <h1 className="text-2xl font-medium">Página inicial</h1>
+          <div className="bg-neutral-800/50 border border-neutral-700/50 shadow-lg px-4 py-3 flex justify-between items-center rounded-2xl mb-4">
+            <h1 className="text-2xl font-semibold">Página inicial</h1>
             <button>
               <CirclePlus
                 className="cursor-pointer hover:scale-110 transition-all"

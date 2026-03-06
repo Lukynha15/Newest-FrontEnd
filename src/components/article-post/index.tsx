@@ -7,15 +7,14 @@ interface ArticlePostProps {
 
 export default function ArticlePost({ children, className }: ArticlePostProps) {
   return (
-    <div 
+    <div
       className={cn(
-        "w-full min-h-screen",
-        "bg-background",
-        "overflow-y-auto custom-scrollbar",
+        "px-6 space-y-6 bg-neutral-900 h-dvh overflow-y-auto custom-scrollbar",
+        "border-x border-neutral-800",
         className
       )}
     >
       {children}
     </div>
-  );  
+  );
 }

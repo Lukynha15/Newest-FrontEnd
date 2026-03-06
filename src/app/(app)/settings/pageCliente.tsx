@@ -220,7 +220,7 @@ export default function SettingsClient() {
       />
 
       <AuthGuard>
-        <div className="h-screen w-lg bg-background">
+        <div className="h-full w-lg bg-background">
           <div className="h-full bg-card border border-border rounded-2xl shadow-lg overflow-hidden">
             <div className="relative h-28 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent">
               <div className="absolute -bottom-16 left-8">

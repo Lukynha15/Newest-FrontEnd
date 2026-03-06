@@ -23,6 +23,9 @@ export const metadata = {
     template: "%s | Newest",
   },
   description: "Descrição padrão",
+  icons: {
+    icon: "/icon.png",
+  },
 };
 
 export default function AppLayout({

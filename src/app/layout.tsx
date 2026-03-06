@@ -18,6 +18,9 @@ export const metadata = {
     default: "Newest",
   },
   description: "Descrição padrão",
+  icons: {
+    icon: "/icon.png",
+  },
 };
 
 export default function RootLayout({
