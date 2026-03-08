@@ -427,7 +427,7 @@ export default function SettingsClient() {
             </div>
           </div>
         </div>
-      </AuthGuard>
+      </AuthGuard >
     </>
   );
 }
