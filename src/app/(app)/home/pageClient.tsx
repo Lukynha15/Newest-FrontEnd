@@ -195,9 +195,10 @@ export default function HomeClient() {
         </DialogNoCloseButton>
 
         <ArticlePost>
-          <div className="bg-neutral-800/50 border border-neutral-700/50 shadow-lg px-4 py-3 flex justify-between items-center rounded-2xl mb-4">
+          <div className="bg-neutral-800/50 border border-neutral-700/50 shadow-lg px-4 py-3 flex justify-between items-center rounded-b-2xl mb-4">
             <div className="flex items-center gap-2">
-              <SidebarTrigger className="md:hidden p-2 bg-neutral-800 hover:bg-neutral-700 border border-neutral-700/50 rounded-lg transition-colors cursor-pointer" />              <h1 className="text-2xl font-semibold">Página inicial</h1>
+              <SidebarTrigger className="md:hidden p-2 bg-neutral-800 hover:bg-neutral-700 border border-neutral-700/50 rounded-lg transition-colors cursor-pointer" />              
+              <h1 className="text-2xl font-semibold">Página inicial</h1>
             </div>
             <button>
               <CirclePlus

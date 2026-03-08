@@ -43,7 +43,7 @@ export default function PostPage() {
   return (
     <AuthGuard>
       <ArticlePost>
-        <div className="space-y-6 p-6">
+        <div className="space-y-6 md:p-6">
           <Post
             id={post.id}
             username={post.author.name}
