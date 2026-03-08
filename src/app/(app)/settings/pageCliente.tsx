@@ -4,6 +4,7 @@ import { DialogNoCloseButton } from "@/components/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Textarea } from "@/components/ui/textarea";
 import { AuthGuard } from "@/guard/AuthGuard";
 import { useCloudinaryUpload } from "@/hooks/use-cloudinary";
@@ -220,9 +221,12 @@ export default function SettingsClient() {
       />
 
       <AuthGuard>
-        <div className="h-full w-lg bg-background">
+        <div className="h-full w-full max-w-lg mx-auto bg-background">
           <div className="h-full bg-card border border-border rounded-2xl shadow-lg overflow-hidden">
-            <div className="relative h-28 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent">
+            <div className="relative h-28 bg-linear-to-br from-primary/10 via-primary/5 to-transparent">
+              <div className="flex justify-end items-start w-full p-8">
+                <SidebarTrigger className="md:hidden size-10 p-2 bg-neutral-800 hover:bg-neutral-700 border border-neutral-700/50 rounded-lg transition-colors cursor-pointer" />
+              </div>
               <div className="absolute -bottom-16 left-8">
                 <div className="relative group">
                   <div className="w-32 h-32 rounded-full overflow-hidden ring-4 ring-background shadow-xl">

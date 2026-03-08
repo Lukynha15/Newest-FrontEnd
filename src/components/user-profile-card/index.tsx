@@ -4,6 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { formatDateLong } from "@/lib/settings.date";
 import { postSettings } from "@/lib/settings.post";
 import { Calendar, FileText, User } from "lucide-react";
+import { SidebarTrigger } from "../ui/sidebar";
 
 interface UserProfileCardProps {
   user: any;
@@ -38,8 +39,9 @@ export default function UserProfileCard({ user, isLoading }: UserProfileCardProp
 
   return (
     <div className="relative">
-      <div className="h-32 bg-linear-to-br from-primary/20 via-primary/10 to-background" />
-
+      <div className="h-32 bg-linear-to-br from-primary/20 via-primary/10 to-background flex justify-end items-start p-5">
+        <SidebarTrigger className="md:hidden size-10 p-2 bg-neutral-800 hover:bg-neutral-700 border border-neutral-700/50 rounded-lg transition-colors cursor-pointer" />
+      </div>
       <div className="px-6 pb-6">
         <div className="flex items-end justify-between -mt-16 mb-4">
           <div className="relative group">

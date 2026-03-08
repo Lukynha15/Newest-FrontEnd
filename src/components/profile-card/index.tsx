@@ -6,6 +6,7 @@ import { getMyProfile } from "@/services/user.service";
 import { useQuery } from "@tanstack/react-query";
 import { Calendar, FileText, Settings } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { SidebarTrigger } from "../ui/sidebar";
 
 export default function ProfileCard() {
   const router = useRouter();
@@ -41,7 +42,9 @@ export default function ProfileCard() {
 
   return (
     <div className="relative">
-      <div className="h-32 bg-linear-to-br from-primary/20 via-primary/10 to-background " />
+      <div className="h-32 bg-linear-to-br from-primary/20 via-primary/10 to-background flex justify-end items-start p-5">
+        <SidebarTrigger className="md:hidden size-10 p-2 bg-neutral-800 hover:bg-neutral-700 border border-neutral-700/50 rounded-lg transition-colors cursor-pointer" />
+      </div>  
 
       <div className="px-6 pb-6">
         <div className="flex items-end justify-between -mt-16 mb-4">

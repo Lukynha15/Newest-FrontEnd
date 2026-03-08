@@ -22,7 +22,7 @@ export const metadata = {
     default: "Newest",
     template: "%s | Newest",
   },
-  description: "Descrição padrão",
+  description: "Faça parte de nossa comunidade!",
   icons: {
     icon: "/icon.png",
   },

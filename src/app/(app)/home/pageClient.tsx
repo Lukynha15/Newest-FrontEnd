@@ -6,6 +6,7 @@ import Post from "@/components/post";
 import { TextareaDemo } from "@/components/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 import { AuthGuard } from "@/guard/AuthGuard";
 import { useCloudinaryUpload } from "@/hooks/use-cloudinary";
 import { usePosts } from "@/hooks/usePost";
@@ -195,7 +196,9 @@ export default function HomeClient() {
 
         <ArticlePost>
           <div className="bg-neutral-800/50 border border-neutral-700/50 shadow-lg px-4 py-3 flex justify-between items-center rounded-2xl mb-4">
-            <h1 className="text-2xl font-semibold">Página inicial</h1>
+            <div className="flex items-center gap-2">
+              <SidebarTrigger className="md:hidden p-2 bg-neutral-800 hover:bg-neutral-700 border border-neutral-700/50 rounded-lg transition-colors cursor-pointer" />              <h1 className="text-2xl font-semibold">Página inicial</h1>
+            </div>
             <button>
               <CirclePlus
                 className="cursor-pointer hover:scale-110 transition-all"

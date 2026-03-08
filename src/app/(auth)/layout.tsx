@@ -18,7 +18,7 @@ export const metadata = {
     default: "Meu App",
     template: "%s | Newest",
   },
-  description: "Descrição padrão",
+  description: "Faça parte de nossa comunidade!",
   icons: {
     icon: "/icon.png",
   },

@@ -1,6 +1,5 @@
 "use client"
 
-import ArticlePost from "@/components/article-post";
 import { DialogNoCloseButton } from "@/components/dialog";
 import Post from "@/components/post";
 import ProfileCard from "@/components/profile-card";
@@ -115,7 +114,8 @@ export default function ProfileClient() {
         </div>
       </DialogNoCloseButton>
 
-      <ArticlePost>
+      <div className="bg-neutral-900 min-h-dvh overflow-y-auto custom-scrollbar space-y-6">
+
         <div className="z-10 bg-card/95 backdrop-blur-md border-b border-border rounded-b-2xl">
           <ProfileCard />
         </div>
@@ -187,7 +187,7 @@ export default function ProfileClient() {
             </>
           )}
         </div>
-      </ArticlePost>
+      </div>
     </AuthGuard>
   );
 }

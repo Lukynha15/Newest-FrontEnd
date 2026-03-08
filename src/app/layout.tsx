@@ -17,7 +17,7 @@ export const metadata = {
   title: {
     default: "Newest",
   },
-  description: "Descrição padrão",
+  description: "Faça parte de nossa comunidade!",
   icons: {
     icon: "/icon.png",
   },

@@ -1,6 +1,5 @@
 "use client"
 
-import ArticlePost from "@/components/article-post";
 import Post from "@/components/post";
 import UserProfileCard from "@/components/user-profile-card";
 import { AuthGuard } from "@/guard/AuthGuard";
@@ -41,7 +40,8 @@ export default function UserPage() {
 
   return (
     <AuthGuard>
-      <ArticlePost>
+      <div className="bg-neutral-900 min-h-dvh overflow-y-auto custom-scrollbar space-y-6">
+
         <div className="z-10 bg-card/95 backdrop-blur-md border-b border-border   rounded-b-2xl">
           <UserProfileCard user={user} isLoading={isLoadingUser} />
         </div>
@@ -85,7 +85,7 @@ export default function UserPage() {
           {!isLoading && !isError && posts && posts.length > 0 && (
             <>
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold">
+                <h2 className="text-lg font-semibold ml-4">
                   Posts ({posts.length})
                 </h2>
               </div>
@@ -112,7 +112,7 @@ export default function UserPage() {
             </>
           )}
         </div>
-      </ArticlePost>
+      </div>
     </AuthGuard>
   );
 }
