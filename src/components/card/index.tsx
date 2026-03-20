@@ -18,7 +18,7 @@ import { useAuth } from "@/hooks/useAuth"
 import { useCloudinaryUpload } from "@/hooks/use-cloudinary"
 import { RegisterFormData, RegisterSchema } from "@/schemas/register.schemas"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Camera, Check, CircleX, X } from "lucide-react"
+import { Camera, Check, CircleX, Eye, EyeClosed, X } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { DialogNoCloseButton } from "../dialog"
@@ -33,6 +33,9 @@ export function CardDemo() {
   const [errorMessage, setErrorMessage] = useState('');
   const { uploadImage, uploading } = useCloudinaryUpload();
   const router = useRouter();
+
+  const [showPassword, setShowPassword] = useState(false)
+
 
   const {
     register,
@@ -214,9 +217,16 @@ export function CardDemo() {
                 <Label htmlFor="password">Senha</Label>
                 <Input
                   id="password"
-                  type="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
-                  {...register('password')}
+                  required
+                  icon={
+                    <button type="button" className="cursor-pointer pt-1.5" onClick={() => setShowPassword(prev => !prev)}>
+                      {showPassword ? <Eye size={16} /> : <EyeClosed size={16} />}
+                    </button>
+
+                  }
                 />
                 {errors.password && (
                   <p className="text-sm text-destructive">{errors.password.message}</p>

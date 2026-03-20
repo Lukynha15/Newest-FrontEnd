@@ -8,7 +8,7 @@ import {
   CardTitle
 } from "@/components/ui/card"
 import { useAuth } from "@/hooks/useAuth"
-import { CircleX } from "lucide-react"
+import { CircleX, Eye, EyeClosed } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { FormEvent, useState } from "react"
 import { DialogNoCloseButton } from "../dialog"
@@ -24,6 +24,7 @@ export function LoginCard() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [open, setOpen] = useState(false);
+  const [showPassword, setShowPassword] = useState(false)
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -76,10 +77,16 @@ export function LoginCard() {
                 <Input
                   id="password"
                   name="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
                   onChange={e => setPassword(e.target.value)}
                   required
+                  icon={
+                    <button type="button" className="cursor-pointer pt-1.5" onClick={() => setShowPassword(prev => !prev)}>
+                      {showPassword ? <Eye size={16} /> : <EyeClosed size={16} />}
+                    </button>
+
+                  }
                 />
               </div>
               <div className="flex flex-col gap-3">
