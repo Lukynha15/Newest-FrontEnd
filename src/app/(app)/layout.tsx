@@ -39,7 +39,7 @@ export default function AppLayout({
         <SidebarProvider>
           <div className="flex min-h-screen w-full">
             <AppSidebar />
-            <main className="flex-1 flex justify-center items-start bg-background min-w-0">
+            <main className="flex-1 flex justify-center items-start bg-neutral-900 min-w-0">
               <Toaster />
               <div className="w-full max-w-2xl">
                 {children}

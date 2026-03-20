@@ -14,6 +14,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { useAuth } from "@/hooks/useAuth";
+import { useNotifications } from "@/hooks/useNotification";
 
 const items = [
   { title: "Página Inicial", url: "/home", icon: Home },
@@ -25,6 +26,7 @@ const items = [
 
 export function AppSidebar() {
   const { logout } = useAuth();
+  const { unreadCount } = useNotifications();
 
   return (
     <Sidebar>
@@ -37,9 +39,16 @@ export function AppSidebar() {
                 {items.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild>
-                      <a href={item.url}>
-                        <item.icon />
-                        <span >{item.title}</span>
+                      <a href={item.url} className="relative flex items-center gap-2">
+                        <div className="relative">
+                          <item.icon />
+                          {item.title === "Notificações" && unreadCount > 0 && (
+                            <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                              {unreadCount > 9 ? "9+" : unreadCount}
+                            </span>
+                          )}
+                        </div>
+                        <span>{item.title}</span>
                       </a>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -60,6 +69,6 @@ export function AppSidebar() {
           </SidebarGroup>
         </SidebarContent>
       </SidebarFooter>
-    </Sidebar >
+    </Sidebar>
   )
 }
