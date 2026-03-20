@@ -225,6 +225,9 @@ export function CardDemo() {
                     </button>
                   }
                   {...register('password')}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleSubmit(onSubmit)()
+                  }}
                 />
                 {errors.password && (
                   <p className="text-sm text-destructive">{errors.password.message}</p>

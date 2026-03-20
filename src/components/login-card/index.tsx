@@ -87,6 +87,9 @@ export function LoginCard() {
                   placeholder="••••••••"
                   onChange={e => setPassword(e.target.value)}
                   required
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') e.currentTarget.form?.requestSubmit()
+                  }}
                   icon={
                     <button type="button" className="cursor-pointer pt-1.5" onClick={() => setShowPassword(prev => !prev)}>
                       {showPassword ? <Eye size={16} /> : <EyeClosed size={16} />}
@@ -95,7 +98,7 @@ export function LoginCard() {
                 />
               </div>
               <div className="flex flex-col gap-3">
-                <Button type="submit" className="w-full" disabled={!isReady}>
+                <Button type="submit" className="w-full" disabled={!isReady} >
                   {isReady ? 'Login' : 'Conectando...'}
                 </Button>
                 <Button type="button" className="w-full" onClick={() => { router.push('/register') }}>
