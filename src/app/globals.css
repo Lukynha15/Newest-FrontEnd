@@ -20,6 +20,9 @@
   scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 }
 
+body {
+  background-color: rgb(23 23 23);
+}
 
 @theme inline {
   --color-background: var(--background);
