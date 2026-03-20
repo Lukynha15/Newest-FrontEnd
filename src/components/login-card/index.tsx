@@ -10,7 +10,7 @@ import {
 import { useAuth } from "@/hooks/useAuth"
 import { CircleX, Eye, EyeClosed } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { FormEvent, useState } from "react"
+import { FormEvent, useEffect, useState } from "react"
 import { DialogNoCloseButton } from "../dialog"
 import { Input } from "../ui/input"
 import { Label } from "../ui/label"
@@ -25,6 +25,12 @@ export function LoginCard() {
   const [password, setPassword] = useState('');
   const [open, setOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false)
+  const [isReady, setIsReady] = useState(false)
+
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/health`)
+      .finally(() => setIsReady(true))
+  }, [])
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -85,15 +91,14 @@ export function LoginCard() {
                     <button type="button" className="cursor-pointer pt-1.5" onClick={() => setShowPassword(prev => !prev)}>
                       {showPassword ? <Eye size={16} /> : <EyeClosed size={16} />}
                     </button>
-
                   }
                 />
               </div>
               <div className="flex flex-col gap-3">
-                <Button type="submit" className="w-full">
-                  Login
+                <Button type="submit" className="w-full" disabled={!isReady}>
+                  {isReady ? 'Login' : 'Conectando...'}
                 </Button>
-                <Button type="submit" className="w-full" onClick={() => { router.push('/register') }} >
+                <Button type="button" className="w-full" onClick={() => { router.push('/register') }}>
                   Criar conta
                 </Button>
               </div>
