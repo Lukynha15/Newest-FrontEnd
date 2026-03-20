@@ -217,16 +217,14 @@ export function CardDemo() {
                 <Label htmlFor="password">Senha</Label>
                 <Input
                   id="password"
-                  name="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
-                  required
                   icon={
                     <button type="button" className="cursor-pointer pt-1.5" onClick={() => setShowPassword(prev => !prev)}>
                       {showPassword ? <Eye size={16} /> : <EyeClosed size={16} />}
                     </button>
-
                   }
+                  {...register('password')}
                 />
                 {errors.password && (
                   <p className="text-sm text-destructive">{errors.password.message}</p>
