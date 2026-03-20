@@ -2,7 +2,7 @@
 
 import ArticlePost from "@/components/article-post"
 import { AuthGuard } from "@/guard/AuthGuard"
-import { useNotifications } from "@/hooks/useNotifications"
+import { useNotifications } from "@/hooks/useNotification"
 import { formatDate } from "@/lib/settings.date"
 import { Bell, Heart, MessageCircle } from "lucide-react"
 import Image from "next/image"
