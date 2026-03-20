@@ -76,7 +76,9 @@ export default function NotificationClient() {
                       <span className="text-muted-foreground"> · {notification.post.title}</span>
                     )}
                   </p>
-                  <span className="text-xs text-muted-foreground">{formatDate(notification.createdAt)}</span>
+                  <span className="text-xs text-muted-foreground">
+                    {formatDate(new Date(notification.createdAt))}
+                  </span>
                 </div>
               </div>
             ))}
