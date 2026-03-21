@@ -4,9 +4,9 @@ import { useDebounce } from "@/hooks/use-debounce"
 import { searchUsers } from "@/services/user.service"
 import { User } from "@/types/user.types"
 import { useQuery } from "@tanstack/react-query"
+import { UserIcon } from "lucide-react"
 import { useRef, useState } from "react"
 import { Textarea } from "../ui/textarea"
-import { UserIcon } from "lucide-react"
 
 interface MentionTextareaProps {
   value: string
