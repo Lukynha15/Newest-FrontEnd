@@ -2,10 +2,11 @@
 
 import { useDebounce } from "@/hooks/use-debounce"
 import { searchUsers } from "@/services/user.service"
+import { User } from "@/types/user.types"
 import { useQuery } from "@tanstack/react-query"
-import { User } from "lucide-react"
 import { useRef, useState } from "react"
 import { Textarea } from "../ui/textarea"
+import { UserIcon } from "lucide-react"
 
 interface MentionTextareaProps {
   value: string
@@ -70,7 +71,7 @@ export function MentionTextarea({ value, onChange, placeholder, className }: Men
 
       {showDropdown && suggestions.length > 0 && (
         <div className="absolute z-50 left-0 right-0 bg-card border border-border rounded-lg shadow-lg overflow-hidden">
-          {suggestions.map((user) => (
+          {suggestions.map((user: User) => (
             <button
               key={user.id}
               type="button"
@@ -85,7 +86,7 @@ export function MentionTextarea({ value, onChange, placeholder, className }: Men
                   <img src={user.avatar} alt={user.name} className="object-cover w-full h-full" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center bg-primary/10">
-                    <User className="h-4 w-4 text-primary" />
+                    <UserIcon className="h-4 w-4 text-primary" />
                   </div>
                 )}
               </div>
