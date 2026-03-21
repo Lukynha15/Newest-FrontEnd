@@ -4,6 +4,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import { Toaster } from "@/components/ui/sonner";
+import { WhatsNewModal } from "@/components/whats-new-modal";
 import { ReactQueryProvider } from "@/provider/ReactQueryProvider";
 import "../../app/globals.css";
 
@@ -41,6 +42,7 @@ export default function AppLayout({
             <AppSidebar />
             <main className="flex-1 flex justify-center items-start bg-neutral-900 min-w-0">
               <Toaster />
+              <WhatsNewModal />
               <div className="w-full max-w-2xl">
                 {children}
               </div>

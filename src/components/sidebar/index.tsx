@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowBigLeft, Bell, Home, Search, Settings, UserPen } from "lucide-react";
+import { ArrowBigLeft, Bell, CircleFadingArrowUpIcon, Home, Search, Settings, UserPen } from "lucide-react";
 
 import {
   Sidebar,
@@ -20,6 +20,7 @@ const items = [
   { title: "Página Inicial", url: "/home", icon: Home },
   { title: "Procurar", url: "/search", icon: Search },
   { title: "Notificações", url: "/notification", icon: Bell },
+  { title: "Atualizações", url: "/update", icon: CircleFadingArrowUpIcon },
   { title: "Perfil", url: "/profile", icon: UserPen },
   { title: "Configurações", url: "/settings", icon: Settings }
 ];
