@@ -13,7 +13,7 @@ import { settingsLike } from "@/lib/settings.like";
 import { cn } from "@/lib/utils";
 import { deletePost, toggleLike } from '@/services/post.service';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { AlertTriangle, Clock, Heart, MessageCircle, MoreVertical, Trash2 } from "lucide-react";
+import { AlertTriangle, ChevronLeft, ChevronRight, Clock, Heart, MessageCircle, MoreVertical, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from 'react';
 
@@ -25,7 +25,7 @@ interface PostProps {
   createdAt: string;
   title: string;
   content: string;
-  image?: string;
+  images?: string[];
   likes: number;
   isLiked: boolean;
   comments: number;
@@ -40,7 +40,7 @@ export default function Post({
   createdAt,
   title,
   content,
-  image,
+  images,
   likes,
   isLiked,
   comments,
@@ -51,6 +51,7 @@ export default function Post({
   const [localIsLiked, setLocalIsLiked] = useState(isLiked);
   const [localLikesCount, setLocalLikesCount] = useState(likes);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const queryClient = useQueryClient();
 
   const isOwner = currentUser?.id === authorId;
@@ -98,18 +99,11 @@ export default function Post({
     setShowDeleteModal(true);
   };
 
-  const handleConfirmDelete = () => {
-    deleteMutation.mutate();
-  };
-
-  const handleCancelDelete = () => {
-    setShowDeleteModal(false);
-  };
+  const handleConfirmDelete = () => deleteMutation.mutate();
+  const handleCancelDelete = () => setShowDeleteModal(false);
 
   const handlePostClick = () => {
-    if (clickable) {
-      router.push(`/post/${id}`);
-    }
+    if (clickable) router.push(`/post/${id}`);
   };
 
   const getAvatarUrl = () => {
@@ -120,10 +114,14 @@ export default function Post({
     return '/profilePicture.png';
   };
 
-  const getImageUrl = () => {
-    if (!image) return null;
-    if (image.startsWith('http')) return image;
-    return `http://localhost:3000${image}`;
+  const handlePrevImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentImageIndex(prev => prev - 1);
+  };
+
+  const handleNextImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentImageIndex(prev => prev + 1);
   };
 
   return (
@@ -157,16 +155,11 @@ export default function Post({
               alt={username}
               className="rounded-full object-cover ring-2 ring-background w-10 h-10"
             />
-
             <div className="flex flex-col gap-1">
-              <span className="font-bold text-sm flex items-center gap-2">
-                {username}
-              </span>
+              <span className="font-bold text-sm flex items-center gap-2">{username}</span>
               <div className="flex items-center gap-1.5 text-muted-foreground">
                 <Clock className="h-3 w-3" />
-                <span className="text-xs">
-                  {createdAt}
-                </span>
+                <span className="text-xs">{createdAt}</span>
               </div>
             </div>
           </div>
@@ -178,7 +171,6 @@ export default function Post({
                 <span className="text-xs font-medium text-primary">Em alta</span>
               </div>
             )}
-
             {isOwner && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
@@ -201,22 +193,46 @@ export default function Post({
         </header>
 
         <div className="space-y-3 mb-6">
-          {title && (
-            <h2 className="text-xl font-bold leading-snug">
-              {title}
-            </h2>
-          )}
+          {title && <h2 className="text-xl font-bold leading-snug">{title}</h2>}
           <p className="text-sm text-muted-foreground leading-relaxed">
             {renderContentWithMentions(content)}
           </p>
 
-          {getImageUrl() && (
-            <div className="mt-4 rounded-xl overflow-hidden border border-border">
+          {images && images.length > 0 && (
+            <div className="mt-4 relative rounded-xl overflow-hidden border border-border">
               <img
-                src={getImageUrl()!}
-                alt={title || 'Post image'}
+                src={images[currentImageIndex]}
+                alt={`Imagem ${currentImageIndex + 1}`}
                 className="w-full h-auto object-cover"
               />
+              {images.length > 1 && (
+                <>
+                  {currentImageIndex > 0 && (
+                    <button
+                      onClick={handlePrevImage}
+                      className="absolute left-2 top-1/2 -translate-y-1/2 p-1.5 bg-black/50 rounded-full hover:bg-black/70 transition-colors cursor-pointer"
+                    >
+                      <ChevronLeft className="w-4 h-4 text-white" />
+                    </button>
+                  )}
+                  {currentImageIndex < images.length - 1 && (
+                    <button
+                      onClick={handleNextImage}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 bg-black/50 rounded-full hover:bg-black/70 transition-colors cursor-pointer"
+                    >
+                      <ChevronRight className="w-4 h-4 text-white" />
+                    </button>
+                  )}
+                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+                    {images.map((_, i) => (
+                      <div
+                        key={i}
+                        className={cn("w-1.5 h-1.5 rounded-full transition-colors", i === currentImageIndex ? "bg-white" : "bg-white/40")}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
           )}
         </div>
@@ -228,25 +244,16 @@ export default function Post({
             className={cn(
               "flex items-center gap-2 px-5 py-2.5 rounded-xl font-medium text-sm",
               "transition-all duration-300 cursor-pointer hover:scale-110 h-full",
-              localIsLiked
-                ? "bg-red-500/15 text-red-500"
-                : "bg-secondary hover:bg-secondary/80"
+              localIsLiked ? "bg-red-500/15 text-red-500" : "bg-secondary hover:bg-secondary/80"
             )}
           >
-            <Heart className={cn(
-              "h-4 w-4 transition-all duration-300",
-              localIsLiked && "fill-red-500 scale-110"
-            )} />
+            <Heart className={cn("h-4 w-4 transition-all duration-300", localIsLiked && "fill-red-500 scale-110")} />
             <span>{settingsLike(localLikesCount)}</span>
           </button>
 
           <button
-            onClick={(e) => {
-              e.stopPropagation();
-              router.push(`/post/${id}`);
-            }}
-            className="flex items-center hover:scale-110 gap-2 px-5 py-2.5 rounded-xl font-medium 
-            text-sm bg-secondary hover:bg-secondary/80 transition-all duration-300 cursor-pointer"
+            onClick={(e) => { e.stopPropagation(); router.push(`/post/${id}`); }}
+            className="flex items-center hover:scale-110 gap-2 px-5 py-2.5 rounded-xl font-medium text-sm bg-secondary hover:bg-secondary/80 transition-all duration-300 cursor-pointer"
           >
             <MessageCircle className="h-4 w-4" />
             <span>{comments || 0}</span>

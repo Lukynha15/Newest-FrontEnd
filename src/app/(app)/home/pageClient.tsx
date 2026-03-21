@@ -21,8 +21,8 @@ export default function HomeClient() {
   const [openNewPost, setOpenNewPost] = useState(false);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [image, setImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [images, setImages] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [errors, setErrors] = useState<{ title?: string; content?: string; image?: string }>({});
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { uploadImage, uploading } = useCloudinaryUpload();
@@ -35,11 +35,10 @@ export default function HomeClient() {
     onSuccess: () => {
       setTitle('');
       setContent('');
-      setImage(null);
-      setImagePreview(null);
+      setImages([]);
+      setImagePreviews([]);
       setErrors({});
       setOpenNewPost(false);
-
       queryClient.invalidateQueries({ queryKey: ['posts'] });
     },
     onError: (error: any) => {
@@ -48,31 +47,34 @@ export default function HomeClient() {
   });
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
 
-    if (!file.type.startsWith('image/')) {
-      setErrors({ image: 'Por favor, selecione uma imagem válida' });
+    if (images.length + files.length > 3) {
+      setErrors({ image: 'Máximo de 3 imagens por post' });
       return;
     }
 
-    if (file.size > 5 * 1024 * 1024) {
-      setErrors({ image: 'A imagem deve ter no máximo 5MB' });
-      return;
+    for (const file of files) {
+      if (!file.type.startsWith('image/')) {
+        setErrors({ image: 'Por favor, selecione apenas imagens' });
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        setErrors({ image: 'Cada imagem deve ter no máximo 5MB' });
+        return;
+      }
     }
 
-    setImage(file);
-    const preview = URL.createObjectURL(file);
-    setImagePreview(preview);
+    setImages(prev => [...prev, ...files]);
+    setImagePreviews(prev => [...prev, ...files.map(f => URL.createObjectURL(f))]);
     setErrors({});
   };
 
-  const handleRemoveImage = () => {
-    setImage(null);
-    setImagePreview(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
+  const handleRemoveImage = (index: number) => {
+    setImages(prev => prev.filter((_, i) => i !== index));
+    setImagePreviews(prev => prev.filter((_, i) => i !== index));
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   function handleOpenNewPost() {
@@ -84,8 +86,8 @@ export default function HomeClient() {
     setOpenNewPost(false);
     setTitle('');
     setContent('');
-    setImage(null);
-    setImagePreview(null);
+    setImages([]);
+    setImagePreviews([]);
     setErrors({});
   }
 
@@ -104,12 +106,9 @@ export default function HomeClient() {
       return;
     }
 
-    let imageUrl: string | undefined;
-    if (image) {
-      imageUrl = await uploadImage(image);
-    }
+    const imageUrls = await Promise.all(images.map(img => uploadImage(img)));
 
-    mutation.mutate({ title, content, image: imageUrl });
+    mutation.mutate({ title, content, images: imageUrls });
   }
 
   return (
@@ -153,36 +152,40 @@ export default function HomeClient() {
             </div>
 
             <div className="space-y-2">
-              {imagePreview ? (
-                <div className="relative">
-                  <img
-                    src={imagePreview}
-                    alt="Preview"
-                    className="w-full h-48 object-cover rounded-lg border border-border"
-                  />
+              <div className="grid grid-cols-3 gap-2">
+                {imagePreviews.map((preview, index) => (
+                  <div key={index} className="relative">
+                    <img
+                      src={preview}
+                      alt={`Preview ${index + 1}`}
+                      className="w-full h-24 object-cover rounded-lg border border-border"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveImage(index)}
+                      className="absolute cursor-pointer top-1 right-1 p-1 bg-destructive text-destructive-foreground rounded-full shadow-lg hover:scale-110 transition-transform"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </div>
+                ))}
+                {images.length < 3 && (
                   <button
                     type="button"
-                    onClick={handleRemoveImage}
-                    className="absolute cursor-pointer top-2 right-2 p-1.5 bg-destructive text-destructive-foreground rounded-full shadow-lg hover:scale-110 transition-transform"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="h-24 border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center gap-1 hover:border-primary transition-colors cursor-pointer"
                   >
-                    <X className="w-4 h-4" />
+                    <ImagePlus className="h-6 w-6 text-muted-foreground" />
+                    <span className="text-xs text-muted-foreground">{images.length}/3</span>
                   </button>
-                </div>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="w-full h-32 border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center gap-2 hover:border-primary transition-colors cursor-pointer"
-                >
-                  <ImagePlus className="h-8 w-8 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">Clique para adicionar uma imagem</span>
-                </button>
-              )}
+                )}
+              </div>
 
               <input
                 ref={fileInputRef}
                 type="file"
                 accept="image/*"
+                multiple
                 onChange={handleImageChange}
                 className="hidden"
               />
@@ -225,7 +228,7 @@ export default function HomeClient() {
               createdAt={formatDate(post.createdAt)}
               title={post.title}
               content={post.content}
-              image={post.image}
+              images={post.images}
               likes={post.likes}
               isLiked={post.isLiked}
               comments={post.comments}

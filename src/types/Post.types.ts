@@ -2,7 +2,7 @@ export interface PostDTO {
   id: string;
   createdAt: Date;
   title: string;
-  image?: string;
+  images?: string[];
   content: string;
   isLiked: boolean;
   likes: number;
