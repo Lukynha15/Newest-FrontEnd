@@ -13,6 +13,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AlertTriangle, MoreVertical, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { DialogNoCloseButton } from "../dialog";
+import { renderContentWithMentions } from "@/lib/render-mentions";
 
 interface CommentProps {
   id: string;
@@ -119,7 +120,9 @@ export default function Comment({
             )}
           </div>
 
-          <p className="text-sm mt-2 wrap-break-words">{content}</p>
+          <p className="text-sm mt-2 wrap-break-words">
+            {renderContentWithMentions(content)}
+          </p>
         </div>
       </div>
     </>

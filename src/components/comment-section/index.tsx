@@ -8,7 +8,7 @@ import { useState } from 'react';
 import Comment from '../comment';
 import { Button } from '../ui/button';
 import { Separator } from '../ui/separator';
-import { Textarea } from '../ui/textarea';
+import { MentionTextarea } from '../mention-area-props';
 
 
 interface CommentSectionProps {
@@ -68,12 +68,11 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 
       <Separator />
       <div className="space-y-3 bg-accent/30 p-4 rounded-xl border border-border">
-        <Textarea
+        <MentionTextarea
           placeholder="Adicione um comentário..."
           value={content}
-          onChange={(e) => setContent(e.target.value)}
+          onChange={(val) => setContent(val)}
           className="resize-none bg-background"
-          rows={3}
         />
         {errors.content && (
           <p className="text-sm text-destructive flex items-center gap-1">

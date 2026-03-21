@@ -8,6 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { renderContentWithMentions } from "@/lib/render-mentions";
 import { settingsLike } from "@/lib/settings.like";
 import { cn } from "@/lib/utils";
 import { deletePost, toggleLike } from '@/services/post.service';
@@ -206,14 +207,14 @@ export default function Post({
             </h2>
           )}
           <p className="text-sm text-muted-foreground leading-relaxed">
-            {content}
+            {renderContentWithMentions(content)}
           </p>
 
           {getImageUrl() && (
             <div className="mt-4 rounded-xl overflow-hidden border border-border">
-              <img 
-                src={getImageUrl()!} 
-                alt={title || 'Post image'} 
+              <img
+                src={getImageUrl()!}
+                alt={title || 'Post image'}
                 className="w-full h-auto object-cover"
               />
             </div>
