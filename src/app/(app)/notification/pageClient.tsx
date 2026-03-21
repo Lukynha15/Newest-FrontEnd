@@ -4,7 +4,7 @@ import ArticlePost from "@/components/article-post"
 import { AuthGuard } from "@/guard/AuthGuard"
 import { useNotifications } from "@/hooks/useNotification"
 import { formatDate } from "@/lib/settings.date"
-import { Bell } from "lucide-react"
+import { Bell, Heart, MessageCircle } from "lucide-react"
 import Image from "next/image"
 import { useEffect } from "react"
 
@@ -66,16 +66,19 @@ export default function NotificationClient() {
                     </div>
                   )}
                   <div className={`absolute -bottom-1 -right-1 rounded-full p-0.5 ${notification.type === "like" ? "bg-red-500" : "bg-blue-500"}`}>
-                    {notification.type === "like" ? " curtiu seu post"
-                      : notification.type === "comment" ? " comentou no seu post"
-                        : " te mencionou em um post"}
+                    {notification.type === "like"
+                      ? <Heart className="w-3 h-3 text-white" />
+                      : <MessageCircle className="w-3 h-3 text-white" />
+                    }
                   </div>
                 </div>
 
                 <div className="flex flex-col gap-0.5 min-w-0">
                   <p className="text-sm">
                     <span className="font-semibold">{notification.actor.name}</span>
-                    {notification.type === "like" ? " curtiu seu post" : " comentou no seu post"}
+                    {notification.type === "like" ? " curtiu seu post"
+                      : notification.type === "comment" ? " comentou no seu post"
+                        : " te mencionou em um post"}
                     {notification.post && (
                       <span className="text-muted-foreground"> · {notification.post.title}</span>
                     )}
