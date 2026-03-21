@@ -2,7 +2,7 @@
 
 import ArticlePost from "@/components/article-post";
 import { DialogNoCloseButton } from "@/components/dialog";
-import { MentionTextarea } from "@/components/mention-text-area";
+import { MentionTextarea } from "@/components/mention-area-props";
 import Post from "@/components/post";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

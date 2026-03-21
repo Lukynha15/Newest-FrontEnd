@@ -26,7 +26,7 @@ export const getAllUsers = async (): Promise<User[]> => {
   return data;
 };
 
-export const searchUsers = async (query: string): Promise<User[]> => {
+export const searchUsers = async (query: string) => {
   const { data } = await api.get("/user/search", {
     params: { q: query },
   });
