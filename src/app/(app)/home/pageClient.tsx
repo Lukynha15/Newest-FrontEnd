@@ -152,34 +152,39 @@ export default function HomeClient() {
             </div>
 
             <div className="space-y-2">
-              <div className="grid grid-cols-3 gap-2">
-                {imagePreviews.map((preview, index) => (
-                  <div key={index} className="relative">
-                    <img
-                      src={preview}
-                      alt={`Preview ${index + 1}`}
-                      className="w-full h-24 object-cover rounded-lg border border-border"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveImage(index)}
-                      className="absolute cursor-pointer top-1 right-1 p-1 bg-destructive text-destructive-foreground rounded-full shadow-lg hover:scale-110 transition-transform"
-                    >
-                      <X className="w-3 h-3" />
-                    </button>
-                  </div>
-                ))}
-                {images.length < 3 && (
-                  <button
-                    type="button"
-                    onClick={() => fileInputRef.current?.click()}
-                    className="h-24 border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center gap-1 hover:border-primary transition-colors cursor-pointer"
-                  >
-                    <ImagePlus className="h-6 w-6 text-muted-foreground" />
-                    <span className="text-xs text-muted-foreground">{images.length}/3</span>
-                  </button>
-                )}
-              </div>
+              {imagePreviews.length > 0 && (
+                <div className="grid grid-cols-3 gap-2 mb-2">
+                  {imagePreviews.map((preview, index) => (
+                    <div key={index} className="relative">
+                      <img
+                        src={preview}
+                        alt={`Preview ${index + 1}`}
+                        className="w-full h-24 object-cover rounded-lg border border-border"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveImage(index)}
+                        className="absolute cursor-pointer top-1 right-1 p-1 bg-destructive text-destructive-foreground rounded-full shadow-lg hover:scale-110 transition-transform"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {images.length < 3 && (
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-full h-32 border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center gap-2 hover:border-primary transition-colors cursor-pointer"
+                >
+                  <ImagePlus className="h-8 w-8 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">
+                    {images.length === 0 ? 'Clique para adicionar uma imagem' : `Adicionar mais (${images.length}/3)`}
+                  </span>
+                </button>
+              )}
 
               <input
                 ref={fileInputRef}
