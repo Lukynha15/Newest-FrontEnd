@@ -42,7 +42,12 @@ export default function HomeClient() {
       queryClient.invalidateQueries({ queryKey: ['posts'] });
     },
     onError: (error: any) => {
-      console.error('Erro ao criar post:', error);
+      const message = error?.response?.data?.message;
+      if (message === 'Uma ou mais imagens contêm conteúdo não permitido') {
+        setErrors({ image: message });
+      } else {
+        console.error('Erro ao criar post:', error);
+      }
     },
   });
 

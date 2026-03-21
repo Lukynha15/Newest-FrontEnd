@@ -199,11 +199,16 @@ export default function Post({
           </p>
 
           {images && images.length > 0 && (
-            <div className="mt-4 relative rounded-xl overflow-hidden border border-border">
+            <div className="mt-4 relative rounded-xl overflow-hidden border border-border h-64">
               <img
                 src={images[currentImageIndex]}
                 alt={`Imagem ${currentImageIndex + 1}`}
-                className="w-full h-64 object-cover"
+                className="absolute inset-0 w-full h-full object-cover blur-xl scale-110 opacity-80"
+              />
+              <img
+                src={images[currentImageIndex]}
+                alt={`Imagem ${currentImageIndex + 1}`}
+                className="relative w-full h-full object-contain"
               />
               {images.length > 1 && (
                 <>
