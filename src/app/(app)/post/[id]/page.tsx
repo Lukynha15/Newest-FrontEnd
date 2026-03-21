@@ -1,13 +1,13 @@
 'use client';
 
 import ArticlePost from '@/components/article-post';
-import Post from '@/components/post';
 import CommentSection from '@/components/comment-section';
+import Post from '@/components/post';
 import { AuthGuard } from '@/guard/AuthGuard';
 import { getPostById } from '@/services/post.service';
 import { useQuery } from '@tanstack/react-query';
-import { useParams } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
+import { useParams } from 'next/navigation';
 
 export default function PostPage() {
   const { id } = useParams();
@@ -51,7 +51,7 @@ export default function PostPage() {
             createdAt={new Date(post.createdAt).toLocaleDateString('pt-BR')}
             title={post.title}
             content={post.content}
-            image={post.image}
+            images={post.images}
             likes={post.likes}
             isLiked={post.isLiked}
             comments={post.comments || 0}

@@ -177,7 +177,7 @@ export default function ProfileClient() {
                     title={post.title}
                     content={post.content}
                     likes={post.likes}
-                    image={post.image}
+                    images={post.images}
                     isLiked={post.isLiked}
                     comments={post.comments}
                     avatar={post.author.avatar}
