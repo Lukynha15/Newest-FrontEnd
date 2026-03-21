@@ -2,8 +2,8 @@
 
 import ArticlePost from "@/components/article-post";
 import { DialogNoCloseButton } from "@/components/dialog";
+import { MentionTextarea } from "@/components/mention-text-area";
 import Post from "@/components/post";
-import { TextareaDemo } from "@/components/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SidebarTrigger } from "@/components/ui/sidebar";
@@ -141,10 +141,10 @@ export default function HomeClient() {
 
             <div className="space-y-2">
               <Label htmlFor="content">Conteúdo</Label>
-              <TextareaDemo
+              <MentionTextarea
                 placeholder="Conteúdo do post"
                 value={content}
-                onChange={(e) => setContent(e.target.value)}
+                onChange={(val) => setContent(val)}
                 className="h-36 resize-none w-full wrap-break-word whitespace-pre-wrap break-all"
               />
               {errors.content && (
@@ -197,7 +197,7 @@ export default function HomeClient() {
         <ArticlePost>
           <div className="bg-neutral-800/50 border border-neutral-700/50 shadow-lg px-4 py-3 flex justify-between items-center rounded-b-2xl mb-4">
             <div className="flex items-center gap-2">
-              <SidebarTrigger className="md:hidden p-2 bg-neutral-800 hover:bg-neutral-700 border border-neutral-700/50 rounded-lg transition-colors cursor-pointer" />              
+              <SidebarTrigger className="md:hidden p-2 bg-neutral-800 hover:bg-neutral-700 border border-neutral-700/50 rounded-lg transition-colors cursor-pointer" />
               <h1 className="text-2xl font-semibold">Página inicial</h1>
             </div>
             <button>
